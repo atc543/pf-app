@@ -30,3 +30,11 @@ export interface SavingsBucket {
   active: boolean
   updated_at: string
 }
+
+export interface MonthlyBudget {
+  id: string
+  month: string
+  category_id: string
+  budgeted_amount: number
+  created_at: string
+}
