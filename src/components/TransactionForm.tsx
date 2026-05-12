@@ -52,7 +52,6 @@ export default function TransactionForm({ transaction, categories, buckets, onCl
   const [payee, setPayee] = useState(transaction?.payee ?? '')
   const [amount, setAmount] = useState(transaction ? String(Math.abs(Number(transaction.amount))) : '')
   const [categoryId, setCategoryId] = useState(transaction?.category_id ?? '')
-  const [bucketId, setBucketId] = useState(transaction?.savings_bucket_id ?? '')
   const [isWithdrawal, setIsWithdrawal] = useState(
     isEdit && transaction!.categories?.type === 'savings' ? Number(transaction!.amount) < 0 : false
   )
@@ -68,6 +67,7 @@ export default function TransactionForm({ transaction, categories, buckets, onCl
 
   const selectedCat = categories.find(c => c.id === categoryId)
   const isSavings = selectedCat?.type === 'savings'
+  const bucketId = isSavings ? (buckets.find(b => b.name === selectedCat?.name)?.id ?? '') : ''
 
   async function handleSave() {
     if (!date) { setError('Date is required.'); return }
@@ -75,7 +75,6 @@ export default function TransactionForm({ transaction, categories, buckets, onCl
     const rawAmt = parseFloat(amount)
     if (!amount || isNaN(rawAmt) || rawAmt <= 0) { setError('Enter a valid amount.'); return }
     if (!categoryId) { setError('Select a category.'); return }
-    if (isSavings && !bucketId) { setError('Select a savings bucket.'); return }
 
     setSubmitting(true)
     setError('')
@@ -208,20 +207,6 @@ export default function TransactionForm({ transaction, categories, buckets, onCl
 
           {isSavings && (
             <>
-              <div>
-                <label className="block text-sm font-medium text-slate-400 mb-1.5">Savings Bucket</label>
-                <select
-                  value={bucketId}
-                  onChange={e => setBucketId(e.target.value)}
-                  className="w-full bg-slate-700 border border-slate-600 text-white rounded-xl px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                >
-                  <option value="">Select bucket…</option>
-                  {buckets.map(b => (
-                    <option key={b.id} value={b.id}>{b.name}</option>
-                  ))}
-                </select>
-              </div>
-
               <div>
                 <label className="block text-sm font-medium text-slate-400 mb-1.5">Type</label>
                 <div className="flex rounded-xl overflow-hidden border border-slate-600">
