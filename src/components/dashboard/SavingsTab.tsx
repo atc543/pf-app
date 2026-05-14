@@ -69,16 +69,27 @@ export default function SavingsTab({ data }: { data: SavingsData }) {
     totalNetWorth,
   } = data
 
-  // Build investment chart data: one entry per month with each account as a key
+  // Build investment chart data: one entry per month with each account as a key.
+  // Fall back to account_id as label if investmentAccounts didn't load.
+  const accountNameById = new Map<string, string>()
+  for (const a of investmentAccounts) accountNameById.set(a.id, a.name)
+  // Derive any missing account names from snapshot data itself
+  for (const snap of investmentSnapshots) {
+    if (!accountNameById.has(snap.account_id)) accountNameById.set(snap.account_id, `Account ${snap.account_id.slice(0, 6)}`)
+  }
+
   const invByMonth = new Map<string, Record<string, number>>()
   for (const snap of investmentSnapshots) {
     if (!invByMonth.has(snap.month)) invByMonth.set(snap.month, {})
-    const acct = investmentAccounts.find(a => a.id === snap.account_id)
-    if (acct) invByMonth.get(snap.month)![acct.name] = Number(snap.balance_after)
+    const name = accountNameById.get(snap.account_id)!
+    invByMonth.get(snap.month)![name] = Number(snap.balance_after)
   }
   const invChartData = Array.from(invByMonth.entries())
     .sort(([a], [b]) => a.localeCompare(b))
     .map(([month, vals]) => ({ month, ...vals }))
+
+  // Unique account names for Line rendering
+  const accountNames = Array.from(accountNameById.values())
 
   // Net worth chart
   const nwChartData = netWorthSnapshots.map(s => ({
@@ -212,11 +223,11 @@ export default function SavingsTab({ data }: { data: SavingsData }) {
                   iconSize={8}
                   wrapperStyle={{ fontSize: 11, color: '#94a3b8', paddingTop: 8 }}
                 />
-                {investmentAccounts.map((acct, i) => (
+                {accountNames.map((name, i) => (
                   <Line
-                    key={acct.id}
+                    key={name}
                     type="monotone"
-                    dataKey={acct.name}
+                    dataKey={name}
                     stroke={ACCOUNT_COLORS[i % ACCOUNT_COLORS.length]}
                     strokeWidth={2}
                     dot={false}

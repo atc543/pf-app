@@ -41,7 +41,7 @@ export function useDashboardSavings(): SavingsData {
       { data: savingsTxData },
     ] = await Promise.all([
       supabase.from('savings_buckets').select('*').eq('active', true).order('sort_order'),
-      supabase.from('investment_accounts').select('*').eq('active', true).order('sort_order'),
+      supabase.from('investment_accounts').select('*').order('sort_order'),
       supabase.from('investment_account_snapshots').select('*').order('month'),
       supabase.from('net_worth_snapshots').select('*').order('month'),
       supabase
