@@ -69,27 +69,28 @@ export default function SavingsTab({ data }: { data: SavingsData }) {
     totalNetWorth,
   } = data
 
-  // Build investment chart data: one entry per month with each account as a key.
-  // Fall back to account_id as label if investmentAccounts didn't load.
-  const accountNameById = new Map<string, string>()
-  for (const a of investmentAccounts) accountNameById.set(a.id, a.name)
-  // Derive any missing account names from snapshot data itself
-  for (const snap of investmentSnapshots) {
-    if (!accountNameById.has(snap.account_id)) accountNameById.set(snap.account_id, `Account ${snap.account_id.slice(0, 6)}`)
+  // Use account_id as the stable dataKey to avoid any name-lookup mismatch.
+  // Display names (for legend/tooltip) are resolved separately.
+  const uniqueAccountIds = [...new Set(investmentSnapshots.map(s => s.account_id))]
+  const accountLabelById = new Map<string, string>()
+  for (const id of uniqueAccountIds) {
+    const acct = investmentAccounts.find(a => a.id === id)
+    accountLabelById.set(id, acct?.name ?? `Acct-${id.slice(0, 6)}`)
   }
 
   const invByMonth = new Map<string, Record<string, number>>()
   for (const snap of investmentSnapshots) {
     if (!invByMonth.has(snap.month)) invByMonth.set(snap.month, {})
-    const name = accountNameById.get(snap.account_id)!
-    invByMonth.get(snap.month)![name] = Number(snap.balance_after)
+    invByMonth.get(snap.month)![snap.account_id] = Number(snap.balance_after)
   }
   const invChartData = Array.from(invByMonth.entries())
     .sort(([a], [b]) => a.localeCompare(b))
     .map(([month, vals]) => ({ month, ...vals }))
 
-  // Unique account names for Line rendering
-  const accountNames = Array.from(accountNameById.values())
+  console.log('[SavingsTab] investmentSnapshots:', investmentSnapshots.slice(0, 3))
+  console.log('[SavingsTab] invChartData sample:', invChartData.slice(0, 3))
+  console.log('[SavingsTab] uniqueAccountIds:', uniqueAccountIds)
+  console.log('[SavingsTab] accountLabelById:', Object.fromEntries(accountLabelById))
 
   // Net worth chart
   const nwChartData = netWorthSnapshots.map(s => ({
@@ -212,6 +213,7 @@ export default function SavingsTab({ data }: { data: SavingsData }) {
                   tickLine={false}
                   axisLine={false}
                   width={44}
+                  domain={['auto', 'auto']}
                 />
                 <Tooltip
                   contentStyle={CHART_TOOLTIP}
@@ -223,11 +225,12 @@ export default function SavingsTab({ data }: { data: SavingsData }) {
                   iconSize={8}
                   wrapperStyle={{ fontSize: 11, color: '#94a3b8', paddingTop: 8 }}
                 />
-                {accountNames.map((name, i) => (
+                {uniqueAccountIds.map((id, i) => (
                   <Line
-                    key={name}
+                    key={id}
                     type="monotone"
-                    dataKey={name}
+                    dataKey={id}
+                    name={accountLabelById.get(id)}
                     stroke={ACCOUNT_COLORS[i % ACCOUNT_COLORS.length]}
                     strokeWidth={2}
                     dot={false}

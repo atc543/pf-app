@@ -128,6 +128,9 @@ export function useDashboardSavings(): SavingsData {
       ? Number(netWorthSnapshots[netWorthSnapshots.length - 1].net_worth)
       : 0
 
+    console.log('[useDashboardSavings] raw investmentSnapshots:', investmentSnapshots)
+    console.log('[useDashboardSavings] investmentAccounts:', investmentAccounts)
+
     setData({
       buckets,
       investmentAccounts,
