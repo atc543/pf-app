@@ -38,3 +38,30 @@ export interface MonthlyBudget {
   budgeted_amount: number
   created_at: string
 }
+
+export interface ThreePaycheckMonth {
+  id: string
+  month: string
+}
+
+export interface InvestmentAccount {
+  id: string
+  name: string
+  sort_order: number
+  active: boolean
+}
+
+export interface InvestmentAccountSnapshot {
+  id: string
+  month: string
+  account_id: string
+  balance: number
+  created_at: string
+}
+
+export interface NetWorthSnapshot {
+  id: string
+  month: string
+  total_net_worth: number
+  created_at: string
+}
