@@ -156,12 +156,12 @@ export default function OverviewTab({ data }: { data: OverviewData }) {
 
   const medianNet = medianNormalIncome - medianSpending - medianNormalIncome * medianSavingsRate
   const latestNW = netWorthSnapshots.length > 0
-    ? netWorthSnapshots[netWorthSnapshots.length - 1].total_net_worth
+    ? netWorthSnapshots[netWorthSnapshots.length - 1].net_worth
     : 0
 
   const nwChartData = netWorthSnapshots.map(s => ({
     month: s.month,
-    netWorth: Number(s.total_net_worth),
+    netWorth: Number(s.net_worth),
   }))
 
   return (

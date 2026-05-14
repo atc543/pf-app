@@ -27,6 +27,14 @@ function GridIcon() {
   )
 }
 
+function BudgetIcon() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/>
+    </svg>
+  )
+}
+
 function GearIcon() {
   return (
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -133,6 +141,10 @@ export default function Layout() {
           <NavLink to="/transactions" className={tabClass}>
             <ListIcon />
             <span className="text-xs">Transactions</span>
+          </NavLink>
+          <NavLink to="/budget" className={tabClass}>
+            <BudgetIcon />
+            <span className="text-xs">Budget</span>
           </NavLink>
           <NavLink to="/dashboard" className={tabClass}>
             <GridIcon />

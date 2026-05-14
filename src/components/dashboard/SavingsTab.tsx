@@ -74,7 +74,7 @@ export default function SavingsTab({ data }: { data: SavingsData }) {
   for (const snap of investmentSnapshots) {
     if (!invByMonth.has(snap.month)) invByMonth.set(snap.month, {})
     const acct = investmentAccounts.find(a => a.id === snap.account_id)
-    if (acct) invByMonth.get(snap.month)![acct.name] = Number(snap.balance)
+    if (acct) invByMonth.get(snap.month)![acct.name] = Number(snap.balance_after)
   }
   const invChartData = Array.from(invByMonth.entries())
     .sort(([a], [b]) => a.localeCompare(b))
@@ -83,7 +83,7 @@ export default function SavingsTab({ data }: { data: SavingsData }) {
   // Net worth chart
   const nwChartData = netWorthSnapshots.map(s => ({
     month: s.month,
-    netWorth: Number(s.total_net_worth),
+    netWorth: Number(s.net_worth),
   }))
 
   // Monthly net savings chart from bucket history (sum of all buckets per month)

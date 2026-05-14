@@ -120,12 +120,12 @@ export function useDashboardSavings(): SavingsData {
     // Total investments = sum of latest snapshot per account
     const latestByAccount = new Map<string, number>()
     for (const snap of investmentSnapshots) {
-      latestByAccount.set(snap.account_id, Number(snap.balance))
+      latestByAccount.set(snap.account_id, Number(snap.balance_after))
     }
     const totalInvestments = Array.from(latestByAccount.values()).reduce((s, v) => s + v, 0)
 
     const latestNW = netWorthSnapshots.length > 0
-      ? Number(netWorthSnapshots[netWorthSnapshots.length - 1].total_net_worth)
+      ? Number(netWorthSnapshots[netWorthSnapshots.length - 1].net_worth)
       : 0
 
     setData({

@@ -4,6 +4,7 @@ import Layout from './components/Layout'
 import LoginPage from './pages/LoginPage'
 import TransactionsPage from './pages/TransactionsPage'
 import DashboardPage from './pages/DashboardPage'
+import BudgetPage from './pages/BudgetPage'
 
 export default function App() {
   const { session, loading } = useAuth()
@@ -17,6 +18,7 @@ export default function App() {
         <Route path="/" element={<Layout />}>
           <Route index element={<Navigate to="/transactions" replace />} />
           <Route path="transactions" element={<TransactionsPage />} />
+          <Route path="budget" element={<BudgetPage />} />
           <Route path="dashboard" element={<DashboardPage />} />
         </Route>
         <Route path="*" element={<Navigate to="/transactions" replace />} />

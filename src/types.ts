@@ -55,13 +55,15 @@ export interface InvestmentAccountSnapshot {
   id: string
   month: string
   account_id: string
-  balance: number
+  balance_after: number
   created_at: string
 }
 
 export interface NetWorthSnapshot {
   id: string
   month: string
-  total_net_worth: number
+  net_worth: number
+  total_savings: number
+  total_investments: number
   created_at: string
 }

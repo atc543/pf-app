@@ -3,18 +3,17 @@ import { useDashboardOverview } from '../hooks/useDashboardOverview'
 import { useDashboardSavings } from '../hooks/useDashboardSavings'
 import OverviewTab from '../components/dashboard/OverviewTab'
 import SavingsTab from '../components/dashboard/SavingsTab'
-import BudgetPage from './BudgetPage'
 
-type Tab = 'overview' | 'savings' | 'budget' | 'coming1' | 'coming2' | 'coming3' | 'coming4'
+type Tab = 'overview' | 'savings' | 'spending' | 'trends' | 'monthlyDetail' | 'recommendations' | 'forecast'
 
 const TABS: { id: Tab; label: string }[] = [
   { id: 'overview', label: 'Overview' },
   { id: 'savings', label: 'Savings' },
-  { id: 'budget', label: 'Budget' },
-  { id: 'coming1', label: 'Spending' },
-  { id: 'coming2', label: 'Income' },
-  { id: 'coming3', label: 'Giving' },
-  { id: 'coming4', label: 'Trends' },
+  { id: 'spending', label: 'Spending' },
+  { id: 'trends', label: 'Trends' },
+  { id: 'monthlyDetail', label: 'Monthly Detail' },
+  { id: 'recommendations', label: 'Recommendations' },
+  { id: 'forecast', label: 'Forecast' },
 ]
 
 function Placeholder({ label }: { label: string }) {
@@ -64,11 +63,11 @@ export default function DashboardPage() {
           ? <div className="flex items-center justify-center h-40"><span className="text-slate-600">Loading…</span></div>
           : <SavingsTab data={savingsData} />
       )}
-      {activeTab === 'budget' && <BudgetPage />}
-      {activeTab === 'coming1' && <Placeholder label="Spending" />}
-      {activeTab === 'coming2' && <Placeholder label="Income" />}
-      {activeTab === 'coming3' && <Placeholder label="Giving" />}
-      {activeTab === 'coming4' && <Placeholder label="Trends" />}
+      {activeTab === 'spending' && <Placeholder label="Spending" />}
+      {activeTab === 'trends' && <Placeholder label="Trends" />}
+      {activeTab === 'monthlyDetail' && <Placeholder label="Monthly Detail" />}
+      {activeTab === 'recommendations' && <Placeholder label="Recommendations" />}
+      {activeTab === 'forecast' && <Placeholder label="Forecast" />}
     </div>
   )
 }
