@@ -4,11 +4,13 @@ import { useDashboardSavings } from '../hooks/useDashboardSavings'
 import { useDashboardSpending } from '../hooks/useDashboardSpending'
 import { useDashboardMonthlyDetail } from '../hooks/useDashboardMonthlyDetail'
 import { useDashboardRecommendations } from '../hooks/useDashboardRecommendations'
+import { useDashboardForecast } from '../hooks/useDashboardForecast'
 import OverviewTab from '../components/dashboard/OverviewTab'
 import SavingsTab from '../components/dashboard/SavingsTab'
 import SpendingTab from '../components/dashboard/SpendingTab'
 import MonthlyDetailTab from '../components/dashboard/MonthlyDetailTab'
 import RecommendationsTab from '../components/dashboard/RecommendationsTab'
+import ForecastTab from '../components/dashboard/ForecastTab'
 
 type Tab = 'overview' | 'savings' | 'spending' | 'trends' | 'monthlyDetail' | 'recommendations' | 'forecast'
 
@@ -39,6 +41,7 @@ export default function DashboardPage() {
   const spendingData = useDashboardSpending()
   const monthlyDetailData = useDashboardMonthlyDetail()
   const recommendationsData = useDashboardRecommendations()
+  const forecastData = useDashboardForecast()
 
   return (
     <div className="max-w-2xl mx-auto">
@@ -88,7 +91,11 @@ export default function DashboardPage() {
           ? <div className="flex items-center justify-center h-40"><span className="text-slate-600">Loading…</span></div>
           : <RecommendationsTab data={recommendationsData} />
       )}
-      {activeTab === 'forecast' && <Placeholder label="Forecast" />}
+      {activeTab === 'forecast' && (
+        forecastData.loading
+          ? <div className="flex items-center justify-center h-40"><span className="text-slate-600">Loading…</span></div>
+          : <ForecastTab data={forecastData} />
+      )}
     </div>
   )
 }
