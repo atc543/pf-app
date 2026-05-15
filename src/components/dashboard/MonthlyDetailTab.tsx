@@ -23,10 +23,10 @@ function monthLabel(s: string) {
 
 function Card({ label, value, sub, accent }: { label: string; value: string; sub?: string; accent?: string }) {
   return (
-    <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700/50">
-      <div className="text-xs text-slate-500 mb-1">{label}</div>
-      <div className={`text-lg font-semibold ${accent ?? 'text-white'}`}>{value}</div>
-      {sub && <div className="text-xs text-slate-500 mt-0.5 leading-snug">{sub}</div>}
+    <div className="bg-pf-card rounded-[10px] p-4 border border-pf-line">
+      <div className="lbl mb-1">{label}</div>
+      <div className={`text-lg amt ${accent ?? 'text-pf-ink'}`}>{value}</div>
+      {sub && <div className="text-xs text-pf-ghost mt-0.5 leading-snug">{sub}</div>}
     </div>
   )
 }
@@ -42,16 +42,16 @@ function ExpTable({ title, rows, income }: { title: string; rows: TableRow[]; in
   const totalPct = income > 0 ? Math.round(totalA / income * 100) : null
 
   return (
-    <div className="rounded-xl border border-slate-700/50 overflow-hidden">
-      <div className="px-4 py-2.5 bg-slate-800/50 border-b border-slate-700/50">
-        <span className="text-xs font-semibold text-slate-400 uppercase tracking-widest">{title}</span>
+    <div className="rounded-[10px] border border-pf-line overflow-hidden">
+      <div className="px-4 py-2.5 bg-pf-card border-b border-pf-line">
+        <span className="lbl">{title}</span>
       </div>
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
-            <tr className="border-b border-slate-800">
+            <tr className="border-b border-pf-line">
               {['Category', 'Budget', 'Actual', 'Var', '%Inc'].map((h, i) => (
-                <th key={h} className={`py-2 text-xs text-slate-500 font-medium ${i === 0 ? 'text-left px-4' : 'text-right px-3'}`}>{h}</th>
+                <th key={h} className={`py-2 text-xs text-pf-ghost font-medium ${i === 0 ? 'text-left px-4' : 'text-right px-3'}`}>{h}</th>
               ))}
             </tr>
           </thead>
@@ -59,29 +59,29 @@ function ExpTable({ title, rows, income }: { title: string; rows: TableRow[]; in
             {rows.map(row => {
               const variance = row.budget != null && row.actual != null ? row.budget - row.actual : null
               const pct = row.actual != null && row.actual > 0 && income > 0 ? Math.round(row.actual / income * 100) : null
-              const vc = variance == null ? 'text-slate-600' : variance >= 0 ? 'text-green-400' : 'text-red-400'
+              const vc = variance == null ? 'text-pf-ghost' : variance >= 0 ? 'text-pf-leaf' : 'text-pf-coral'
               return (
-                <tr key={row.name} className="border-b border-slate-800/50">
-                  <td className="px-4 py-2 text-xs text-slate-200">{row.name}</td>
-                  <td className="text-right px-3 py-2 text-xs text-slate-400">{row.budget != null ? fmt(row.budget) : '—'}</td>
-                  <td className="text-right px-3 py-2 text-xs text-slate-300">{row.actual != null && row.actual > 0 ? fmt(row.actual) : '—'}</td>
+                <tr key={row.name} className="border-b border-pf-line/50">
+                  <td className="px-4 py-2 text-xs text-pf-ink">{row.name}</td>
+                  <td className="text-right px-3 py-2 text-xs text-pf-dim">{row.budget != null ? fmt(row.budget) : '—'}</td>
+                  <td className="text-right px-3 py-2 text-xs text-pf-dim">{row.actual != null && row.actual > 0 ? fmt(row.actual) : '—'}</td>
                   <td className={`text-right px-3 py-2 text-xs font-medium ${vc}`}>
                     {variance != null ? (variance >= 0 ? '+' : '') + fmt(variance) : '—'}
                   </td>
-                  <td className="text-right px-3 py-2 text-xs text-slate-500">{pct != null ? `${pct}%` : '—'}</td>
+                  <td className="text-right px-3 py-2 text-xs text-pf-ghost">{pct != null ? `${pct}%` : '—'}</td>
                 </tr>
               )
             })}
           </tbody>
           <tfoot>
-            <tr className="bg-slate-800/30 border-t border-slate-700/50">
-              <td className="px-4 py-2.5 text-xs font-semibold text-slate-300">Total</td>
-              <td className="text-right px-3 py-2.5 text-xs font-semibold text-slate-300">{fmt(totalB)}</td>
-              <td className="text-right px-3 py-2.5 text-xs font-semibold text-slate-300">{fmt(totalA)}</td>
-              <td className={`text-right px-3 py-2.5 text-xs font-semibold ${totalV >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+            <tr className="bg-pf-card/40 border-t border-pf-line">
+              <td className="px-4 py-2.5 text-xs font-semibold text-pf-dim">Total</td>
+              <td className="text-right px-3 py-2.5 text-xs font-semibold text-pf-dim">{fmt(totalB)}</td>
+              <td className="text-right px-3 py-2.5 text-xs font-semibold text-pf-dim">{fmt(totalA)}</td>
+              <td className={`text-right px-3 py-2.5 text-xs font-semibold ${totalV >= 0 ? 'text-pf-leaf' : 'text-pf-coral'}`}>
                 {(totalV >= 0 ? '+' : '') + fmt(totalV)}
               </td>
-              <td className="text-right px-3 py-2.5 text-xs font-semibold text-slate-400">
+              <td className="text-right px-3 py-2.5 text-xs font-semibold text-pf-ghost">
                 {totalPct != null ? `${totalPct}%` : '—'}
               </td>
             </tr>
@@ -141,21 +141,21 @@ export default function MonthlyDetailTab({ data }: { data: MonthlyDetailData }) 
     <div className="pb-4">
       {/* Header */}
       <div className="px-4 pt-4 pb-2">
-        <div className="text-base font-semibold text-white mb-0.5">Monthly Detail</div>
-        <div className="text-xs text-slate-500">Select a month · ★ = 3-paycheck month · Income shown as-is</div>
+        <div className="text-base text-pf-ink mb-0.5">Monthly Detail</div>
+        <div className="text-xs text-pf-ghost">Select a month · ★ = 3-paycheck month · Income shown as-is</div>
       </div>
 
       {/* Month navigator */}
-      <div className="sticky top-0 z-10 bg-slate-900/95 backdrop-blur-sm border-b border-slate-800 px-4 py-3 flex items-center justify-between">
+      <div className="sticky top-0 z-10 bg-pf-bg/95 backdrop-blur-sm border-b border-pf-line px-4 py-3 flex items-center justify-between">
         <button onClick={() => canPrev && setMonth(shiftMonth(month, -1))} disabled={!canPrev}
-          className="text-slate-400 hover:text-white disabled:opacity-30 p-2 rounded-lg transition-colors">
+          className="text-pf-ghost hover:text-pf-ink disabled:opacity-30 p-2 rounded-lg transition-colors">
           <span className="text-xl font-light leading-none">‹</span>
         </button>
-        <span className="text-white font-semibold text-sm">
+        <span className="text-pf-ink font-medium text-sm">
           {monthLabel(month)}{is3p ? ' ★' : ''}
         </span>
         <button onClick={() => canNext && setMonth(shiftMonth(month, 1))} disabled={!canNext}
-          className="text-slate-400 hover:text-white disabled:opacity-30 p-2 rounded-lg transition-colors">
+          className="text-pf-ghost hover:text-pf-ink disabled:opacity-30 p-2 rounded-lg transition-colors">
           <span className="text-xl font-light leading-none">›</span>
         </button>
       </div>
@@ -163,7 +163,7 @@ export default function MonthlyDetailTab({ data }: { data: MonthlyDetailData }) 
       {/* Summary cards */}
       <div className="px-4 pt-4 pb-4">
         <div className="grid grid-cols-2 gap-3">
-          <Card label="Income" value={fmt(income)} accent="text-green-400" />
+          <Card label="Income" value={fmt(income)} accent="text-pf-leaf" />
           <Card
             label="Total Spending"
             value={fmt(totalSpend)}
@@ -172,7 +172,7 @@ export default function MonthlyDetailTab({ data }: { data: MonthlyDetailData }) 
           <Card
             label="Surplus / Deficit"
             value={fmt(surplus)}
-            accent={surplus >= 0 ? 'text-green-400' : 'text-red-400'}
+            accent={surplus >= 0 ? 'text-pf-leaf' : 'text-pf-coral'}
             sub={is3p ? 'Includes 3rd paycheck' : undefined}
           />
           <Card

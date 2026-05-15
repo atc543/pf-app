@@ -32,8 +32,8 @@ const LEGEND_ITEMS = [
   { color: '#4caf7d', label: 'School + GI Bill' },
   { color: '#888888', label: 'Transition' },
   { color: '#e05252', label: 'Summer gap' },
-  { color: '#8b6de8', label: '3-paycheck' },
-  { color: '#3aacaa', label: 'Internship' },
+  { color: '#c8a96e', label: '3-paycheck' },
+  { color: '#6aab8a', label: 'Internship' },
 ]
 
 // ── Formatters ─────────────────────────────────────────────────────
@@ -50,9 +50,9 @@ function fmtK(v: number): string {
 
 function KpiCard({ label, value, accent }: { label: string; value: string; accent?: string }) {
   return (
-    <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700/50">
-      <div className="text-xs text-slate-500 mb-1">{label}</div>
-      <div className={`text-lg font-semibold ${accent ?? 'text-white'}`}>{value}</div>
+    <div className="bg-pf-card rounded-[10px] p-4 border border-pf-line">
+      <div className="lbl mb-1">{label}</div>
+      <div className={`text-lg amt ${accent ?? 'text-pf-ink'}`}>{value}</div>
     </div>
   )
 }
@@ -81,11 +81,11 @@ function MonthSelect({
 }) {
   return (
     <span className="inline-flex items-center gap-1.5">
-      {label && <span className="text-sm text-slate-400 shrink-0">{label}</span>}
+      {label && <span className="text-sm text-pf-ghost shrink-0">{label}</span>}
       <select
         value={value}
         onChange={e => onChange(Number(e.target.value))}
-        className="bg-slate-700 border border-slate-600 text-white rounded-lg px-2 py-1.5 text-base focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        className="bg-pf-card border border-pf-line text-pf-ink rounded-lg px-2 py-1.5 text-base focus:outline-none focus:ring-2 focus:ring-pf-gold"
       >
         {!noNone && <option value={-1}>— None —</option>}
         {BASE_SCHED.map((row, i) => (
@@ -116,7 +116,7 @@ function NumInput({
       placeholder={placeholder ?? '0'}
       onChange={e => onChange(Number(e.target.value) || 0)}
       step={step}
-      className={`bg-slate-700 border border-slate-600 text-white rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-indigo-500 ${className}`}
+      className={`bg-pf-card border border-pf-line text-pf-ink rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-pf-gold ${className}`}
     />
   )
 }
@@ -126,7 +126,7 @@ function RotTick(props: { x?: number; y?: number; payload?: { value: string } })
   if (!payload) return null
   return (
     <g transform={`translate(${x},${y})`}>
-      <text x={0} y={0} dy={12} textAnchor="end" fill="#64748b" fontSize={9} transform="rotate(-45)">
+      <text x={0} y={0} dy={12} textAnchor="end" fill="#5a5550" fontSize={9} transform="rotate(-45)">
         {payload.value}
       </text>
     </g>
@@ -146,14 +146,14 @@ function CatRow({
 }) {
   return (
     <div className="flex items-center justify-between gap-3">
-      <span className="text-sm text-slate-400 truncate">{cat.name}</span>
+      <span className="text-sm text-pf-ghost truncate">{cat.name}</span>
       <input
         type="number"
         value={value || ''}
         placeholder="0"
         onChange={e => onChange(Number(e.target.value) || 0)}
         step={10}
-        className="w-24 shrink-0 text-right bg-slate-700 border border-slate-600 text-white rounded-lg px-2 py-1.5 text-base focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        className="w-24 shrink-0 text-right bg-pf-card border border-pf-line text-pf-ink rounded-lg px-2 py-1.5 text-base focus:outline-none focus:ring-2 focus:ring-pf-gold"
       />
     </div>
   )
@@ -219,9 +219,9 @@ export default function ForecastTab({ data }: { data: ForecastData }) {
       name: row.m,
       value: row.total,
       fill: row.internship > 0
-        ? '#3aacaa'
+        ? '#6aab8a'
         : row.is3pay
-          ? '#8b6de8'
+          ? '#c8a96e'
           : (PHASE_COLORS[row.phase] ?? '#888888'),
     })),
   [forecastRows])
@@ -263,30 +263,30 @@ export default function ForecastTab({ data }: { data: ForecastData }) {
     <div className="pb-8">
 
       {/* ── Section 1: Scenario builder ── */}
-      <div className="mx-4 mt-4 mb-5 rounded-xl border border-slate-700/50 bg-slate-800/30 overflow-hidden">
-        <div className="px-4 py-3 border-b border-slate-700/50">
-          <span className="text-sm font-semibold text-white">Scenario builder</span>
+      <div className="mx-4 mt-4 mb-5 rounded-[10px] border border-pf-line bg-pf-card overflow-hidden">
+        <div className="px-4 py-3 border-b border-pf-line">
+          <span className="text-sm text-pf-ink">Scenario builder</span>
         </div>
         <div className="p-4 grid grid-cols-1 md:grid-cols-3 gap-5">
 
           {/* 1. Caroline salary */}
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs text-slate-400">Caroline gross salary ($)</label>
+            <label className="text-xs text-pf-ghost">Caroline gross salary ($)</label>
             <input
               type="number"
               value={carolineSalary}
               onChange={e => setCarolineSalary(Number(e.target.value) || 0)}
               step={1000}
-              className="bg-slate-700 border border-slate-600 text-white rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="bg-pf-bg border border-pf-line text-pf-ink rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-pf-gold"
             />
-            <span className="text-xs text-slate-500">
+            <span className="text-xs text-pf-ghost">
               Actual {fmt(twoPayMonthly)}/mo (2-pay) · {fmt(threePayMonthly)}/mo (3-pay)
             </span>
           </div>
 
           {/* 2. Annual raise */}
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs text-slate-400">Annual raise (%)</label>
+            <label className="text-xs text-pf-ghost">Annual raise (%)</label>
             <div className="flex items-center gap-2 flex-wrap">
               <NumInput
                 value={raisePct}
@@ -298,7 +298,7 @@ export default function ForecastTab({ data }: { data: ForecastData }) {
               <MonthSelect label="starting" value={raiseIdx} onChange={setRaiseIdx} />
             </div>
             {raisePct > 0 && raiseIdx >= 0 && (
-              <span className="text-xs text-green-400">
+              <span className="text-xs text-pf-leaf">
                 → ~{fmt(raisedPaycheck * 2)}/mo from {BASE_SCHED[raiseIdx].m}
               </span>
             )}
@@ -306,7 +306,7 @@ export default function ForecastTab({ data }: { data: ForecastData }) {
 
           {/* 3. New job salary */}
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs text-slate-400">New job salary — overrides above ($)</label>
+            <label className="text-xs text-pf-ghost">New job salary — overrides above ($)</label>
             <div className="flex items-center gap-2 flex-wrap">
               <input
                 type="number"
@@ -314,12 +314,12 @@ export default function ForecastTab({ data }: { data: ForecastData }) {
                 placeholder="e.g. 140000"
                 onChange={e => setNjSalary(Number(e.target.value) || 0)}
                 step={1000}
-                className="flex-1 min-w-[110px] bg-slate-700 border border-slate-600 text-white rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="flex-1 min-w-[110px] bg-pf-bg border border-pf-line text-pf-ink rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-pf-gold"
               />
               <MonthSelect label="from" value={njIdx} onChange={setNjIdx} />
             </div>
             {njSalary > 0 && njIdx >= 0 && (
-              <span className="text-xs text-blue-400">
+              <span className="text-xs text-pf-sky">
                 → flat {fmt(estMonthly(njSalary))}/mo from {BASE_SCHED[njIdx].m} (avg incl. 3-pay)
               </span>
             )}
@@ -327,20 +327,20 @@ export default function ForecastTab({ data }: { data: ForecastData }) {
 
           {/* 4. GI Bill rate */}
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs text-slate-400">GI Bill monthly rate ($)</label>
+            <label className="text-xs text-pf-ghost">GI Bill monthly rate ($)</label>
             <input
               type="number"
               value={giRate}
               onChange={e => setGiRate(Number(e.target.value) || 0)}
               step={50}
-              className="bg-slate-700 border border-slate-600 text-white rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="bg-pf-bg border border-pf-line text-pf-ink rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-pf-gold"
             />
-            <span className="text-xs text-slate-500">E-5 w/ dependents · prorated for partial months</span>
+            <span className="text-xs text-pf-ghost">E-5 w/ dependents · prorated for partial months</span>
           </div>
 
           {/* 5. Internship income */}
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs text-slate-400">Internship income ($/mo)</label>
+            <label className="text-xs text-pf-ghost">Internship income ($/mo)</label>
             <div className="flex items-center gap-2 flex-wrap">
               <NumInput
                 value={intAmt}
@@ -356,17 +356,17 @@ export default function ForecastTab({ data }: { data: ForecastData }) {
 
           {/* 6. 3-paycheck toggle */}
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs text-slate-400">3-paycheck months</label>
+            <label className="text-xs text-pf-ghost">3-paycheck months</label>
             <label className="flex items-start gap-2 cursor-pointer">
               <input
                 type="checkbox"
                 checked={apply3p}
                 onChange={e => setApply3p(e.target.checked)}
-                className="mt-0.5 accent-indigo-500 w-4 h-4 shrink-0"
+                className="mt-0.5 accent-pf-gold w-4 h-4 shrink-0"
               />
-              <span className="text-sm text-slate-300">Apply (Jul 2026, Jan 2027, Jul 2027, Dec 2027)</span>
+              <span className="text-sm text-pf-dim">Apply (Jul 2026, Jan 2027, Jul 2027, Dec 2027)</span>
             </label>
-            <span className="text-xs text-slate-500 leading-snug">
+            <span className="text-xs text-pf-ghost leading-snug">
               Applies to Caroline's current employer pay cycle only. New job salary uses flat monthly average.
             </span>
           </div>
@@ -376,19 +376,19 @@ export default function ForecastTab({ data }: { data: ForecastData }) {
 
       {/* ── Section 2: Forecast table ── */}
       <div className="mx-4 mb-5">
-        <div className="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-2">Income Forecast</div>
-        <div className="rounded-xl border border-slate-700/50 overflow-hidden">
+        <div className="lbl mb-2">Income Forecast</div>
+        <div className="rounded-[10px] border border-pf-line overflow-hidden">
           <div style={{ overflowX: 'auto' }}>
             <table className="w-full" style={{ minWidth: 700 }}>
               <thead>
-                <tr className="border-b border-slate-700/50 bg-slate-800/50">
-                  <th className="text-left pl-4 pr-2 py-2.5 text-xs font-semibold text-slate-400">Month</th>
-                  <th className="text-right px-3 py-2.5 text-xs font-semibold text-slate-400">Caroline</th>
-                  <th className="text-right px-3 py-2.5 text-xs font-semibold text-slate-400">GI Bill</th>
-                  <th className="text-right px-3 py-2.5 text-xs font-semibold text-slate-400">Luke</th>
-                  <th className="text-right px-3 py-2.5 text-xs font-semibold text-slate-400">Internship</th>
-                  <th className="text-right px-3 py-2.5 text-xs font-semibold text-slate-400">Total Income</th>
-                  <th className="text-left px-3 py-2.5 text-xs font-semibold text-slate-400">Phase</th>
+                <tr className="border-b border-pf-line bg-pf-card">
+                  <th className="text-left pl-4 pr-2 py-2.5 text-xs font-semibold text-pf-ghost">Month</th>
+                  <th className="text-right px-3 py-2.5 text-xs font-semibold text-pf-ghost">Caroline</th>
+                  <th className="text-right px-3 py-2.5 text-xs font-semibold text-pf-ghost">GI Bill</th>
+                  <th className="text-right px-3 py-2.5 text-xs font-semibold text-pf-ghost">Luke</th>
+                  <th className="text-right px-3 py-2.5 text-xs font-semibold text-pf-ghost">Internship</th>
+                  <th className="text-right px-3 py-2.5 text-xs font-semibold text-pf-ghost">Total Income</th>
+                  <th className="text-left px-3 py-2.5 text-xs font-semibold text-pf-ghost">Phase</th>
                 </tr>
               </thead>
               <tbody>
@@ -400,25 +400,25 @@ export default function ForecastTab({ data }: { data: ForecastData }) {
                   return (
                     <tr
                       key={row.m}
-                      className="border-b border-slate-800/50"
-                      style={isSummer ? { backgroundColor: 'rgba(224, 82, 82, 0.07)' } : undefined}
+                      className="border-b border-pf-line/50"
+                      style={isSummer ? { backgroundColor: 'rgba(192, 107, 107, 0.07)' } : undefined}
                     >
-                      <td className="pl-4 pr-2 py-2 text-xs text-slate-300 whitespace-nowrap">{row.m}</td>
+                      <td className="pl-4 pr-2 py-2 text-xs text-pf-dim whitespace-nowrap">{row.m}</td>
 
-                      <td className="text-right px-3 py-2 text-xs text-white whitespace-nowrap">
+                      <td className="text-right px-3 py-2 text-xs text-pf-ink whitespace-nowrap">
                         {fmt(row.caroline)}
                         {njActive && (
-                          <span className="ml-1 inline-block px-1.5 py-0.5 rounded-full text-[10px] font-medium bg-blue-500/20 text-blue-400 border border-blue-500/30">
+                          <span className="ml-1 inline-block px-1.5 py-0.5 rounded-full text-[10px] font-medium bg-pf-sky/15 text-pf-sky border border-pf-sky/30">
                             new job
                           </span>
                         )}
                         {raiseActive && (
-                          <span className="ml-1 inline-block px-1.5 py-0.5 rounded-full text-[10px] font-medium bg-green-500/20 text-green-400 border border-green-500/30">
+                          <span className="ml-1 inline-block px-1.5 py-0.5 rounded-full text-[10px] font-medium bg-pf-leaf/15 text-pf-leaf border border-pf-leaf/30">
                             +{sc.raisePct}%
                           </span>
                         )}
                         {row.is3pay && (
-                          <span className="ml-1 inline-block px-1.5 py-0.5 rounded-full text-[10px] font-medium bg-purple-500/20 text-purple-400 border border-purple-500/30">
+                          <span className="ml-1 inline-block px-1.5 py-0.5 rounded-full text-[10px] font-medium bg-pf-gold/15 text-pf-gold border border-pf-gold/30">
                             3-pay
                           </span>
                         )}
@@ -426,30 +426,30 @@ export default function ForecastTab({ data }: { data: ForecastData }) {
 
                       <td className="text-right px-3 py-2 text-xs whitespace-nowrap">
                         {row.giBill > 0
-                          ? <span className="text-white">{fmt(row.giBill)}</span>
-                          : <span className="text-slate-600">—</span>}
+                          ? <span className="text-pf-ink">{fmt(row.giBill)}</span>
+                          : <span className="text-pf-ghost">—</span>}
                       </td>
 
                       <td className="text-right px-3 py-2 text-xs whitespace-nowrap">
                         {row.luke > 0
-                          ? <span className="text-white">{fmt(row.luke)}</span>
-                          : <span className="text-slate-600">—</span>}
+                          ? <span className="text-pf-ink">{fmt(row.luke)}</span>
+                          : <span className="text-pf-ghost">—</span>}
                       </td>
 
                       <td className="text-right px-3 py-2 text-xs whitespace-nowrap">
                         {row.internship > 0
-                          ? <span className="text-white">{fmt(row.internship)}</span>
-                          : <span className="text-slate-600">—</span>}
+                          ? <span className="text-pf-ink">{fmt(row.internship)}</span>
+                          : <span className="text-pf-ghost">—</span>}
                       </td>
 
-                      <td className="text-right px-3 py-2 text-xs font-semibold text-white whitespace-nowrap">
+                      <td className="text-right px-3 py-2 text-xs font-semibold text-pf-ink whitespace-nowrap">
                         {fmt(row.total)}
                       </td>
 
                       <td className="px-3 py-2 text-xs">
                         <div className="flex items-center gap-1 whitespace-nowrap">
                           <PhasePill phase={row.phase} />
-                          <span className="text-slate-500">{row.pl}</span>
+                          <span className="text-pf-ghost">{row.pl}</span>
                         </div>
                       </td>
                     </tr>
@@ -463,28 +463,28 @@ export default function ForecastTab({ data }: { data: ForecastData }) {
 
       {/* ── Section 3: Income bar chart ── */}
       <div className="mx-4 mb-5">
-        <div className="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-2">Monthly Total Income</div>
+        <div className="lbl mb-2">Monthly Total Income</div>
 
         {/* Legend */}
         <div className="flex flex-wrap gap-x-4 gap-y-2 mb-3">
           {LEGEND_ITEMS.map(item => (
             <div key={item.label} className="flex items-center gap-1.5">
               <div className="w-3 h-3 rounded-sm shrink-0" style={{ backgroundColor: item.color }} />
-              <span className="text-xs text-slate-400">{item.label}</span>
+              <span className="text-xs text-pf-ghost">{item.label}</span>
             </div>
           ))}
         </div>
 
-        <div className="bg-slate-800/30 rounded-xl border border-slate-700/50 p-3">
+        <div className="bg-pf-card rounded-[10px] border border-pf-line p-3">
           <ResponsiveContainer width="100%" height={260}>
             <BarChart data={chartData} margin={{ top: 5, right: 10, left: 5, bottom: 55 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
+              <CartesianGrid strokeDasharray="3 3" stroke="#2e2a25" />
               <XAxis dataKey="name" tick={RotTick as any} interval={0} />
-              <YAxis tickFormatter={fmtK} tick={{ fill: '#64748b', fontSize: 11 }} width={40} />
+              <YAxis tickFormatter={fmtK} tick={{ fill: '#5a5550', fontSize: 11 }} width={40} />
               <Tooltip
                 formatter={(v: unknown) => [`$${Number(v).toLocaleString()}`, ''] as [string, string]}
-                contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #334155', borderRadius: 8 }}
-                labelStyle={{ color: '#94a3b8' }}
+                contentStyle={{ backgroundColor: '#211e1a', border: '1px solid #2e2a25', borderRadius: 8 }}
+                labelStyle={{ color: '#5a5550' }}
               />
               <Bar dataKey="value" radius={[3, 3, 0, 0]}>
                 {chartData.map((entry, i) => (
@@ -497,28 +497,28 @@ export default function ForecastTab({ data }: { data: ForecastData }) {
       </div>
 
       {/* ── Section 4: Budget planner ── */}
-      <div className="mx-4 mb-4 rounded-xl border border-slate-700/50 bg-slate-800/30 overflow-hidden">
-        <div className="px-4 py-3 border-b border-slate-700/50 flex items-center justify-between gap-3">
-          <span className="text-sm font-semibold text-white">Future month budget planner</span>
+      <div className="mx-4 mb-4 rounded-[10px] border border-pf-line bg-pf-card overflow-hidden">
+        <div className="px-4 py-3 border-b border-pf-line flex items-center justify-between gap-3">
+          <span className="text-sm text-pf-ink">Future month budget planner</span>
           <button
             onClick={resetDefaults}
-            className="text-xs text-slate-400 hover:text-white px-3 py-1.5 rounded-lg border border-slate-700 hover:border-slate-500 transition-colors shrink-0"
+            className="text-xs text-pf-ghost hover:text-pf-ink px-3 py-1.5 rounded-lg border border-pf-line hover:border-pf-dim transition-colors shrink-0"
           >
             Reset to defaults
           </button>
         </div>
 
         {/* Month selector + income summary */}
-        <div className="px-4 pt-4 pb-4 border-b border-slate-700/50">
+        <div className="px-4 pt-4 pb-4 border-b border-pf-line">
           <div className="flex items-center gap-3 flex-wrap">
-            <label className="text-sm text-slate-400 shrink-0">Month:</label>
+            <label className="text-sm text-pf-ghost shrink-0">Month:</label>
             <MonthSelect value={plannerIdx} onChange={setPlannerIdx} noNone />
           </div>
 
           <div className="mt-3 flex flex-col gap-1">
-            <div className="text-sm text-slate-300">
+            <div className="text-sm text-pf-dim">
               <span>Projected income: </span>
-              <span className="font-semibold text-white">{fmt(plannerRow.total)}</span>
+              <span className="text-pf-ink">{fmt(plannerRow.total)}</span>
               {(() => {
                 const parts = [
                   plannerRow.caroline > 0 && `Caroline ${fmt(plannerRow.caroline)}`,
@@ -527,13 +527,13 @@ export default function ForecastTab({ data }: { data: ForecastData }) {
                   plannerRow.internship > 0 && `Internship ${fmt(plannerRow.internship)}`,
                 ].filter(Boolean)
                 return parts.length > 0 ? (
-                  <span className="text-slate-500 ml-1">({parts.join(' · ')})</span>
+                  <span className="text-pf-ghost ml-1">({parts.join(' · ')})</span>
                 ) : null
               })()}
             </div>
             <div className="text-sm">
-              <span className="text-slate-400">10% giving target: </span>
-              <span className="text-green-400 font-medium">{fmt(Math.round(plannerRow.total * 0.1))}</span>
+              <span className="text-pf-ghost">10% giving target: </span>
+              <span className="text-pf-leaf font-medium">{fmt(Math.round(plannerRow.total * 0.1))}</span>
             </div>
           </div>
         </div>
@@ -543,7 +543,7 @@ export default function ForecastTab({ data }: { data: ForecastData }) {
 
           {/* Fixed */}
           <div>
-            <div className="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-3">Fixed Expenses</div>
+            <div className="lbl mb-3">Fixed Expenses</div>
             <div className="space-y-2">
               {fixedLeaves.map(cat => (
                 <CatRow
@@ -558,7 +558,7 @@ export default function ForecastTab({ data }: { data: ForecastData }) {
 
           {/* Variable */}
           <div>
-            <div className="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-3">Variable Expenses</div>
+            <div className="lbl mb-3">Variable Expenses</div>
             <div className="space-y-2">
               {varLeaves.map(cat => (
                 <CatRow
@@ -574,7 +574,7 @@ export default function ForecastTab({ data }: { data: ForecastData }) {
 
         {/* One-off expenses */}
         <div className="px-4 pt-2 pb-4">
-          <div className="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-3">
+          <div className="lbl mb-3">
             Anticipated one-off expenses
           </div>
           <div className="space-y-2">
@@ -585,7 +585,7 @@ export default function ForecastTab({ data }: { data: ForecastData }) {
                   value={o.desc}
                   onChange={e => setOneOffs(prev => prev.map((x, j) => j === i ? { ...x, desc: e.target.value } : x))}
                   placeholder="Description"
-                  className="flex-1 bg-slate-700 border border-slate-600 text-white rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-indigo-500 placeholder-slate-600 min-w-0"
+                  className="flex-1 bg-pf-bg border border-pf-line text-pf-ink rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-pf-gold placeholder:text-pf-ghost min-w-0"
                 />
                 <input
                   type="number"
@@ -593,7 +593,7 @@ export default function ForecastTab({ data }: { data: ForecastData }) {
                   onChange={e => setOneOffs(prev => prev.map((x, j) => j === i ? { ...x, amt: Number(e.target.value) || 0 } : x))}
                   placeholder="0"
                   step={50}
-                  className="w-24 shrink-0 text-right bg-slate-700 border border-slate-600 text-white rounded-lg px-2 py-2 text-base focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-24 shrink-0 text-right bg-pf-bg border border-pf-line text-pf-ink rounded-lg px-2 py-2 text-base focus:outline-none focus:ring-2 focus:ring-pf-gold"
                 />
               </div>
             ))}
@@ -608,7 +608,7 @@ export default function ForecastTab({ data }: { data: ForecastData }) {
             <KpiCard
               label="Surplus / Deficit"
               value={fmt(surplus)}
-              accent={surplus >= 0 ? 'text-green-400' : 'text-red-400'}
+              accent={surplus >= 0 ? 'text-pf-leaf' : 'text-pf-coral'}
             />
           </div>
         </div>

@@ -5,17 +5,17 @@ interface LoadingSpinnerProps {
 
 const SIZES = {
   sm: 'w-4 h-4 border-2',
-  md: 'w-8 h-8 border-2',
-  lg: 'w-12 h-12 border-[3px]',
+  md: 'w-7 h-7 border-2',
+  lg: 'w-10 h-10 border-[2px]',
 }
 
 export default function LoadingSpinner({ size = 'md', fullPage = false }: LoadingSpinnerProps) {
   const spinner = (
-    <div className={`${SIZES[size]} rounded-full border-slate-700 border-t-indigo-500 animate-spin`} />
+    <div className={`${SIZES[size]} rounded-full border-pf-line border-t-pf-gold animate-spin`} />
   )
   if (fullPage) {
     return (
-      <div className="min-h-screen bg-slate-900 flex items-center justify-center">
+      <div className="min-h-screen bg-pf-bg flex items-center justify-center">
         {spinner}
       </div>
     )

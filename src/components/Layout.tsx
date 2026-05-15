@@ -10,7 +10,7 @@ import TransactionForm from './TransactionForm'
 
 function ListIcon() {
   return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
       <line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/>
       <line x1="8" y1="18" x2="21" y2="18"/><circle cx="3" cy="6" r="0.5" fill="currentColor"/>
       <circle cx="3" cy="12" r="0.5" fill="currentColor"/><circle cx="3" cy="18" r="0.5" fill="currentColor"/>
@@ -20,7 +20,7 @@ function ListIcon() {
 
 function GridIcon() {
   return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
       <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
       <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
     </svg>
@@ -29,7 +29,7 @@ function GridIcon() {
 
 function BudgetIcon() {
   return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
       <rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/>
     </svg>
   )
@@ -37,7 +37,7 @@ function BudgetIcon() {
 
 function GearIcon() {
   return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
       <circle cx="12" cy="12" r="3"/>
       <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
     </svg>
@@ -67,59 +67,48 @@ export default function Layout() {
     return () => document.removeEventListener('mousedown', handleClick)
   }, [showMenu])
 
-  function openNew() {
-    setEditTx(null)
-    setFormOpen(true)
-  }
-
-  function openEdit(tx: Transaction) {
-    setEditTx(tx)
-    setFormOpen(true)
-  }
-
-  function closeForm() {
-    setFormOpen(false)
-    setEditTx(null)
-  }
+  function openNew() { setEditTx(null); setFormOpen(true) }
+  function openEdit(tx: Transaction) { setEditTx(tx); setFormOpen(true) }
+  function closeForm() { setFormOpen(false); setEditTx(null) }
 
   const tabClass = ({ isActive }: { isActive: boolean }) =>
-    `flex-1 flex flex-col items-center justify-center gap-1 transition-colors ${
-      isActive ? 'text-indigo-400' : 'text-slate-500'
+    `flex-1 flex flex-col items-center justify-center gap-1 transition-colors text-xs ${
+      isActive ? 'text-pf-gold' : 'text-pf-ghost hover:text-pf-dim'
     }`
 
   return (
-    <div className="flex flex-col min-h-screen bg-slate-900">
+    <div className="flex flex-col min-h-screen bg-pf-bg">
 
-      {/* Top bar — paddingTop pushes content below iPhone notch */}
+      {/* Top bar */}
       <header
-        className="fixed top-0 inset-x-0 z-20 bg-slate-900 border-b border-slate-800"
+        className="fixed top-0 inset-x-0 z-20 bg-pf-bg/95 border-b border-pf-line backdrop-blur-sm"
         style={{ paddingTop: 'env(safe-area-inset-top)' }}
       >
-      <div className="h-14 flex items-center justify-between px-4">
-        <span className="text-white font-bold text-lg tracking-tight">PF App</span>
-        <div className="relative" ref={menuRef}>
-          <button
-            onClick={() => setShowMenu(v => !v)}
-            className="text-slate-400 hover:text-white p-2 rounded-lg transition-colors"
-            aria-label="Settings"
-          >
-            <GearIcon />
-          </button>
-          {showMenu && (
-            <div className="absolute top-full right-0 mt-1 bg-slate-800 border border-slate-700 rounded-xl shadow-xl min-w-[130px] overflow-hidden z-30">
-              <button
-                onClick={() => { signOut(); setShowMenu(false) }}
-                className="w-full text-left px-4 py-3 text-slate-200 hover:bg-slate-700 text-sm transition-colors"
-              >
-                Sign out
-              </button>
-            </div>
-          )}
+        <div className="h-14 flex items-center justify-between px-6">
+          <span className="font-display text-pf-ink text-xl tracking-tight">PF App</span>
+          <div className="relative" ref={menuRef}>
+            <button
+              onClick={() => setShowMenu(v => !v)}
+              className="text-pf-ghost hover:text-pf-dim p-2 rounded-lg transition-colors"
+              aria-label="Settings"
+            >
+              <GearIcon />
+            </button>
+            {showMenu && (
+              <div className="absolute top-full right-0 mt-1 bg-pf-card border border-pf-line rounded-xl shadow-2xl min-w-[130px] overflow-hidden z-30">
+                <button
+                  onClick={() => { signOut(); setShowMenu(false) }}
+                  className="w-full text-left px-4 py-3 text-pf-dim hover:text-pf-ink hover:bg-pf-line/40 text-sm transition-colors"
+                >
+                  Sign out
+                </button>
+              </div>
+            )}
+          </div>
         </div>
-      </div>
       </header>
 
-      {/* Page content — top padding tracks header height + safe-area-inset-top */}
+      {/* Page content */}
       <main
         className="flex-1 overflow-y-auto"
         style={{
@@ -130,33 +119,38 @@ export default function Layout() {
         <Outlet context={{ openEdit }} />
       </main>
 
-      {/* FAB */}
+      {/* FAB — square, amber */}
       <button
         onClick={openNew}
-        className="fixed right-5 z-20 w-14 h-14 bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 rounded-full flex items-center justify-center shadow-xl transition-colors"
-        style={{ bottom: 'calc(4rem + env(safe-area-inset-bottom) + 1rem)' }}
+        className="fixed right-5 z-20 w-13 h-13 bg-pf-gold hover:bg-pf-gold/90 active:bg-pf-gold/80 flex items-center justify-center shadow-lg transition-colors"
+        style={{
+          bottom: 'calc(4rem + env(safe-area-inset-bottom) + 1rem)',
+          borderRadius: '12px',
+          width: '52px',
+          height: '52px',
+        }}
         aria-label="Add transaction"
       >
-        <span className="text-white text-3xl font-light leading-none">+</span>
+        <span className="text-pf-bg text-2xl font-light leading-none" style={{ marginTop: '-1px' }}>+</span>
       </button>
 
-      {/* Tab bar */}
+      {/* Tab bar — thin border only, no background pill */}
       <nav
-        className="fixed bottom-0 inset-x-0 z-20 bg-slate-900 border-t border-slate-800"
+        className="fixed bottom-0 inset-x-0 z-20 bg-pf-bg border-t border-pf-line"
         style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
       >
         <div className="flex h-16 max-w-2xl mx-auto">
           <NavLink to="/transactions" className={tabClass}>
             <ListIcon />
-            <span className="text-xs">Transactions</span>
+            <span>Transactions</span>
           </NavLink>
           <NavLink to="/budget" className={tabClass}>
             <BudgetIcon />
-            <span className="text-xs">Budget</span>
+            <span>Budget</span>
           </NavLink>
           <NavLink to="/dashboard" className={tabClass}>
             <GridIcon />
-            <span className="text-xs">Dashboard</span>
+            <span>Dashboard</span>
           </NavLink>
         </div>
       </nav>

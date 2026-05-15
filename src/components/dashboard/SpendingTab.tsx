@@ -8,9 +8,9 @@ import type { SpendingData } from '../../hooks/useDashboardSpending'
 
 type Filter = 'all' | 'fixed' | 'variable'
 
-const TT = { backgroundColor: '#1e293b', border: '1px solid #334155', borderRadius: 8 }
-const AT = { fill: '#64748b', fontSize: 11 }
-const GR = { stroke: '#1e293b' }
+const TT = { backgroundColor: '#211e1a', border: '1px solid #2e2a25', borderRadius: 8 }
+const AT = { fill: '#5a5550', fontSize: 11 }
+const GR = { stroke: '#2e2a25' }
 
 function fmt(n: number) {
   return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n)
@@ -25,7 +25,7 @@ function RotTick(props: any) {
   if (!payload) return null
   return (
     <g transform={`translate(${x},${y})`}>
-      <text x={0} y={0} dy={14} textAnchor="end" fill="#64748b" fontSize={10} transform="rotate(-45)">
+      <text x={0} y={0} dy={14} textAnchor="end" fill="#5a5550" fontSize={10} transform="rotate(-45)">
         {fmtShort(payload.value)}
       </text>
     </g>
@@ -33,12 +33,12 @@ function RotTick(props: any) {
 }
 
 function SecHead({ children }: { children: React.ReactNode }) {
-  return <div className="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-3">{children}</div>
+  return <div className="lbl mb-3">{children}</div>
 }
 
 function ChartBox({ children, height }: { children: React.ReactNode; height: number }) {
   return (
-    <div className="bg-slate-800/30 rounded-xl border border-slate-700/50 p-3">
+    <div className="bg-pf-card rounded-[10px] border border-pf-line p-3">
       <ResponsiveContainer width="100%" height={height}>{children as any}</ResponsiveContainer>
     </div>
   )
@@ -54,7 +54,6 @@ export default function SpendingTab({ data }: { data: SpendingData }) {
   const passes = (isFixed: boolean) =>
     filter === 'all' || (filter === 'fixed' ? isFixed : !isFixed)
 
-  // Section 1: category totals filtered by toggle
   const catTotals = useMemo(() => {
     const m = new Map<string, { name: string; total: number }>()
     for (const tx of spendingTxs) {
@@ -65,7 +64,6 @@ export default function SpendingTab({ data }: { data: SpendingData }) {
     return Array.from(m.values()).filter(c => c.total > 0).sort((a, b) => b.total - a.total)
   }, [spendingTxs, filter]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Section 2: fixed over/under budget (always shown)
   const fixedAnalysis = useMemo(() => {
     const fixedCats = categories.filter(c => c.is_fixed && (c.type === 'expense' || c.type === 'giving') && c.parent_category_id)
     return fixedCats.map(cat => {
@@ -80,7 +78,6 @@ export default function SpendingTab({ data }: { data: SpendingData }) {
     }).filter(x => x.avg > 0 || x.budget > 0).sort((a, b) => b.variance - a.variance)
   }, [categories, spendingTxs, budgets, months])
 
-  // Sections 3 & 4: trend data
   const fixedTrend = useMemo(() => months.map(month => ({
     month, total: spendingTxs.filter(tx => tx.month === month && tx.isFixed).reduce((s, tx) => s + tx.amount, 0),
   })), [months, spendingTxs])
@@ -89,7 +86,6 @@ export default function SpendingTab({ data }: { data: SpendingData }) {
     month, total: spendingTxs.filter(tx => tx.month === month && !tx.isFixed).reduce((s, tx) => s + tx.amount, 0),
   })), [months, spendingTxs])
 
-  // Section 5: per-category mini charts
   const miniCharts = useMemo(() => {
     const latestBudget = (catId: string) =>
       budgets.filter(b => b.category_id === catId).sort((a, b) => b.month.localeCompare(a.month))[0]?.budgeted_amount ?? 0
@@ -120,7 +116,6 @@ export default function SpendingTab({ data }: { data: SpendingData }) {
     return result
   }, [categories, spendingTxs, budgets, months])
 
-  // Section 6: income growth
   const incomeTrend = useMemo(() => months.map(month => ({
     month,
     actual: incomeTxs.filter(tx => tx.month === month).reduce((s, tx) => s + tx.amount, 0),
@@ -135,16 +130,16 @@ export default function SpendingTab({ data }: { data: SpendingData }) {
     <div className="pb-4">
       {/* Header */}
       <div className="px-4 pt-4 pb-1">
-        <div className="text-base font-semibold text-white mb-0.5">Spending Analysis</div>
-        <div className="text-xs text-slate-500">20 months of actuals · Sep 2024 – Apr 2026</div>
+        <div className="text-base text-pf-ink mb-0.5">Spending Analysis</div>
+        <div className="text-xs text-pf-ghost">20 months of actuals · Sep 2024 – Apr 2026</div>
       </div>
 
       {/* Toggle */}
       <div className="px-4 py-3">
-        <div className="flex rounded-xl overflow-hidden border border-slate-700 w-fit">
+        <div className="flex rounded-xl overflow-hidden border border-pf-line w-fit">
           {(['all', 'fixed', 'variable'] as Filter[]).map(f => (
             <button key={f} onClick={() => setFilter(f)}
-              className={`px-5 py-2 text-sm font-medium capitalize transition-colors ${filter === f ? 'bg-indigo-600 text-white' : 'bg-slate-800 text-slate-400 hover:text-white'}`}>
+              className={`px-5 py-2 text-sm font-medium capitalize transition-colors ${filter === f ? 'bg-pf-gold text-pf-bg' : 'bg-pf-card text-pf-ghost hover:text-pf-ink'}`}>
               {f === 'all' ? 'All' : f.charAt(0).toUpperCase() + f.slice(1)}
             </button>
           ))}
@@ -154,12 +149,12 @@ export default function SpendingTab({ data }: { data: SpendingData }) {
       {/* Section 1: Category totals */}
       <div className="px-4 mb-6">
         <SecHead>20-Month Totals by Category</SecHead>
-        <div className="bg-slate-800/30 rounded-xl border border-slate-700/50 p-3">
+        <div className="bg-pf-card rounded-[10px] border border-pf-line p-3">
           <ResponsiveContainer width="100%" height={Math.max(180, catTotals.length * 26)}>
             <BarChart layout="vertical" data={catTotals} margin={{ top: 4, right: 16, bottom: 4, left: 0 }}>
               <CartesianGrid horizontal={false} strokeDasharray="3 3" {...GR} />
               <XAxis type="number" tickFormatter={v => `$${(v / 1000).toFixed(0)}k`} tick={AT} tickLine={false} axisLine={false} />
-              <YAxis type="category" dataKey="name" width={112} tick={{ fill: '#94a3b8', fontSize: 11 }} tickLine={false} axisLine={false} />
+              <YAxis type="category" dataKey="name" width={112} tick={{ fill: '#5a5550', fontSize: 11 }} tickLine={false} axisLine={false} />
               <Tooltip
                 contentStyle={TT}
                 content={({ active, payload, label }) => {
@@ -167,39 +162,39 @@ export default function SpendingTab({ data }: { data: SpendingData }) {
                   const v = Number(payload[0]?.value ?? 0)
                   return (
                     <div style={TT} className="p-3 text-xs">
-                      <div className="text-slate-300 font-medium mb-1">{label}</div>
-                      <div className="text-white">{fmt(v)}</div>
-                      <div className="text-slate-400">Avg/mo: {fmt(v / 20)}</div>
+                      <div className="text-pf-dim font-medium mb-1">{label}</div>
+                      <div className="text-pf-ink">{fmt(v)}</div>
+                      <div className="text-pf-ghost">Avg/mo: {fmt(v / 20)}</div>
                     </div>
                   )
                 }}
               />
-              <Bar dataKey="total" fill="#d97706" radius={[0, 3, 3, 0]} />
+              <Bar dataKey="total" fill="#c8a96e" radius={[0, 3, 3, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
       </div>
 
-      {/* Section 2: Fixed over/under budget (always shown) */}
+      {/* Section 2: Fixed over/under budget */}
       <div className="px-4 mb-6">
         <SecHead>Fixed Categories — Budget vs 20-Month Avg</SecHead>
-        <div className="rounded-xl border border-slate-700/50 overflow-hidden">
+        <div className="rounded-[10px] border border-pf-line overflow-hidden">
           {fixedAnalysis.map(row => {
-            const sc = row.status === 'over' ? 'text-red-400' : row.status === 'under' ? 'text-green-400' : 'text-slate-400'
-            const bc = row.status === 'over' ? '#ef4444' : row.status === 'under' ? '#22c55e' : '#64748b'
+            const sc = row.status === 'over' ? 'text-pf-coral' : row.status === 'under' ? 'text-pf-leaf' : 'text-pf-ghost'
+            const bc = row.status === 'over' ? '#c06b6b' : row.status === 'under' ? '#6aab8a' : '#5a5550'
             return (
-              <div key={row.name} className="border-b border-slate-800 px-4 py-3 last:border-0">
+              <div key={row.name} className="border-b border-pf-line px-4 py-3 last:border-0">
                 <div className="flex items-center justify-between mb-1.5">
-                  <span className="text-sm text-slate-200">{row.name}</span>
+                  <span className="text-sm text-pf-ink">{row.name}</span>
                   <div className="flex gap-3 text-xs items-center">
-                    <span className="text-slate-500">{row.budget > 0 ? `Budget ${fmt(row.budget)}` : 'No budget'}</span>
-                    <span className="text-slate-300">Avg {fmt(row.avg)}</span>
+                    <span className="text-pf-ghost">{row.budget > 0 ? `Budget ${fmt(row.budget)}` : 'No budget'}</span>
+                    <span className="text-pf-dim">Avg {fmt(row.avg)}</span>
                     <span className={`font-medium ${sc}`}>
                       {row.budget > 0 ? (row.variance > 0 ? '+' : '') + fmt(row.variance) : '—'}
                     </span>
                   </div>
                 </div>
-                <div className="h-1.5 bg-slate-700 rounded-full overflow-hidden">
+                <div className="h-[3px] bg-pf-line rounded-full overflow-hidden">
                   <div className="h-full rounded-full" style={{ width: `${row.pct}%`, backgroundColor: bc }} />
                 </div>
               </div>
@@ -218,7 +213,7 @@ export default function SpendingTab({ data }: { data: SpendingData }) {
               <XAxis dataKey="month" tick={RotTick} interval={1} tickLine={false} axisLine={false} />
               <YAxis tickFormatter={v => `$${(v / 1000).toFixed(1)}k`} tick={AT} tickLine={false} axisLine={false} width={40} />
               <Tooltip contentStyle={TT} formatter={(v: any) => [fmt(Number(v)), 'Fixed spending']} labelFormatter={(l: any) => fmtShort(String(l))} />
-              <Line type="monotone" dataKey="total" stroke="#7c3aed" strokeWidth={2} dot={false} />
+              <Line type="monotone" dataKey="total" stroke="#6a8fc0" strokeWidth={2} dot={false} />
             </LineChart>
           </ChartBox>
         </div>
@@ -234,27 +229,27 @@ export default function SpendingTab({ data }: { data: SpendingData }) {
               <XAxis dataKey="month" tick={RotTick} interval={1} tickLine={false} axisLine={false} />
               <YAxis tickFormatter={v => `$${(v / 1000).toFixed(1)}k`} tick={AT} tickLine={false} axisLine={false} width={40} />
               <Tooltip contentStyle={TT} formatter={(v: any) => [fmt(Number(v)), 'Variable spending']} labelFormatter={(l: any) => fmtShort(String(l))} />
-              <Line type="monotone" dataKey="total" stroke="#d97706" strokeWidth={2} dot={false} />
+              <Line type="monotone" dataKey="total" stroke="#c8a96e" strokeWidth={2} dot={false} />
             </LineChart>
           </ChartBox>
         </div>
       )}
 
-      {/* Section 5: Per-category mini charts (variable only) */}
+      {/* Section 5: Per-category mini charts */}
       {showVariable && (
         <div className="px-4 mb-6">
           <SecHead>Monthly by Category</SecHead>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {miniCharts.map(({ name, monthly, latestBudget: lb }) => (
-              <div key={name} className="bg-slate-800/30 rounded-xl border border-slate-700/50 p-3">
-                <div className="text-xs font-medium text-slate-300 mb-2">
+              <div key={name} className="bg-pf-card rounded-[10px] border border-pf-line p-3">
+                <div className="text-xs font-medium text-pf-dim mb-2">
                   {name}{lb > 0 ? ` — ${fmt(lb)} budget` : ''}
                 </div>
                 <ResponsiveContainer width="100%" height={180}>
                   <BarChart data={monthly} margin={{ top: 4, right: 4, bottom: 38, left: 0 }}>
                     <CartesianGrid vertical={false} strokeDasharray="3 3" {...GR} />
                     <XAxis dataKey="month" tick={RotTick} interval={2} tickLine={false} axisLine={false} />
-                    <YAxis tickFormatter={v => v >= 1000 ? `$${(v / 1000).toFixed(0)}k` : `$${v}`} tick={{ fill: '#64748b', fontSize: 10 }} tickLine={false} axisLine={false} width={34} />
+                    <YAxis tickFormatter={v => v >= 1000 ? `$${(v / 1000).toFixed(0)}k` : `$${v}`} tick={{ fill: '#5a5550', fontSize: 10 }} tickLine={false} axisLine={false} width={34} />
                     <Tooltip
                       contentStyle={TT}
                       content={({ active, payload, label }) => {
@@ -263,20 +258,20 @@ export default function SpendingTab({ data }: { data: SpendingData }) {
                         const budget = (payload[0]?.payload as any)?.budget ?? 0
                         return (
                           <div style={TT} className="p-2.5 text-xs">
-                            <div className="text-slate-400 mb-1">{fmtShort(String(label))}</div>
-                            <div className="text-white">Actual: {fmt(actual)}</div>
-                            {budget > 0 && <div className="text-slate-400">Budget: {fmt(budget)}</div>}
-                            {budget > 0 && <div className={actual > budget ? 'text-red-400' : 'text-green-400'}>
+                            <div className="text-pf-ghost mb-1">{fmtShort(String(label))}</div>
+                            <div className="text-pf-ink">Actual: {fmt(actual)}</div>
+                            {budget > 0 && <div className="text-pf-ghost">Budget: {fmt(budget)}</div>}
+                            {budget > 0 && <div className={actual > budget ? 'text-pf-coral' : 'text-pf-leaf'}>
                               {actual > budget ? `+${fmt(actual - budget)} over` : `${fmt(budget - actual)} under`}
                             </div>}
                           </div>
                         )
                       }}
                     />
-                    {lb > 0 && <ReferenceLine y={lb} stroke="#64748b" strokeDasharray="4 2" strokeWidth={1} />}
+                    {lb > 0 && <ReferenceLine y={lb} stroke="#5a5550" strokeDasharray="4 2" strokeWidth={1} />}
                     <Bar dataKey="actual" radius={[2, 2, 0, 0]}>
                       {monthly.map((e, i) => (
-                        <Cell key={i} fill={e.budget > 0 && e.actual > e.budget ? '#ef4444' : '#22c55e'} />
+                        <Cell key={i} fill={e.budget > 0 && e.actual > e.budget ? '#c06b6b' : '#6aab8a'} />
                       ))}
                     </Bar>
                   </BarChart>
@@ -287,10 +282,10 @@ export default function SpendingTab({ data }: { data: SpendingData }) {
         </div>
       )}
 
-      {/* Section 6: Income growth (always shown) */}
+      {/* Section 6: Income growth */}
       <div className="px-4 mb-6">
         <SecHead>Income Growth</SecHead>
-        <div className="bg-slate-800/30 rounded-xl border border-slate-700/50 p-3">
+        <div className="bg-pf-card rounded-[10px] border border-pf-line p-3">
           <ResponsiveContainer width="100%" height={220}>
             <BarChart data={incomeTrend} margin={{ top: 4, right: 8, bottom: 44, left: 0 }}>
               <CartesianGrid vertical={false} strokeDasharray="3 3" {...GR} />
@@ -304,10 +299,10 @@ export default function SpendingTab({ data }: { data: SpendingData }) {
                   const budget = Number(payload.find((p: any) => p.dataKey === 'budget')?.value ?? 0)
                   return (
                     <div style={TT} className="p-2.5 text-xs">
-                      <div className="text-slate-400 mb-1">{fmtShort(String(label))}</div>
-                      <div className="text-white">Actual: {fmt(actual)}</div>
-                      <div className="text-slate-400">Budget: {fmt(budget)}</div>
-                      {budget > 0 && <div className={actual >= budget ? 'text-green-400' : 'text-red-400'}>
+                      <div className="text-pf-ghost mb-1">{fmtShort(String(label))}</div>
+                      <div className="text-pf-ink">Actual: {fmt(actual)}</div>
+                      <div className="text-pf-ghost">Budget: {fmt(budget)}</div>
+                      {budget > 0 && <div className={actual >= budget ? 'text-pf-leaf' : 'text-pf-coral'}>
                         {actual >= budget ? `+${fmt(actual - budget)}` : `-${fmt(budget - actual)}`} vs budget
                       </div>}
                     </div>
@@ -316,16 +311,16 @@ export default function SpendingTab({ data }: { data: SpendingData }) {
               />
               <Bar dataKey="actual" name="Actual" radius={[3, 3, 0, 0]}>
                 {incomeTrend.map((e, i) => (
-                  <Cell key={i} fill={e.is3p ? '#f59e0b' : '#2563eb'} />
+                  <Cell key={i} fill={e.is3p ? '#c8a96e' : '#6a8fc0'} />
                 ))}
               </Bar>
-              <Bar dataKey="budget" name="Budget" fill="#334155" radius={[3, 3, 0, 0]} />
+              <Bar dataKey="budget" name="Budget" fill="#2e2a25" radius={[3, 3, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
-          <div className="flex items-center gap-4 justify-center text-xs text-slate-500 mt-1">
-            <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-sm bg-blue-600 inline-block" />Normal income</span>
-            <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-sm bg-amber-400 inline-block" />3-paycheck ★</span>
-            <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-sm bg-slate-700 inline-block" />Budget</span>
+          <div className="flex items-center gap-4 justify-center text-xs text-pf-ghost mt-1">
+            <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-sm inline-block" style={{ backgroundColor: '#6a8fc0' }} />Normal income</span>
+            <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-sm inline-block" style={{ backgroundColor: '#c8a96e' }} />3-paycheck ★</span>
+            <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-sm inline-block" style={{ backgroundColor: '#2e2a25' }} />Budget</span>
           </div>
         </div>
       </div>

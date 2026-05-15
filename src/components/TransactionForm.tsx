@@ -85,7 +85,6 @@ export default function TransactionForm({ transaction, categories, buckets, onCl
 
     try {
       if (isEdit) {
-        // Reverse original bucket effect
         if (transaction!.savings_bucket_id) {
           await adjustBucket(transaction!.savings_bucket_id, -Number(transaction!.amount))
         }
@@ -134,21 +133,23 @@ export default function TransactionForm({ transaction, categories, buckets, onCl
     }
   }
 
+  const inputCls = 'w-full bg-pf-bg border border-pf-line text-pf-ink rounded-xl px-4 py-3 text-base placeholder:text-pf-ghost focus:outline-none focus:border-pf-gold transition'
+
   return (
     <>
       <div className="fixed inset-0 z-40 bg-black/60" onClick={onClose} />
 
-      <div className="fixed inset-x-0 bottom-0 z-50 flex flex-col bg-slate-800 rounded-t-2xl max-h-[92vh] md:inset-auto md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:w-[480px] md:rounded-2xl md:max-h-[90vh]">
+      <div className="fixed inset-x-0 bottom-0 z-50 flex flex-col bg-pf-card rounded-t-2xl max-h-[92vh] md:inset-auto md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:w-[480px] md:rounded-2xl md:max-h-[90vh]">
 
         {/* Handle (mobile) */}
         <div className="flex justify-center pt-3 pb-1 md:hidden shrink-0">
-          <div className="w-10 h-1 bg-slate-600 rounded-full" />
+          <div className="w-10 h-1 bg-pf-line rounded-full" />
         </div>
 
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-3 shrink-0">
-          <button onClick={onClose} className="text-slate-400 hover:text-white text-sm w-14 text-left">Cancel</button>
-          <h2 className="text-white font-semibold">{isEdit ? 'Edit Transaction' : 'New Transaction'}</h2>
+          <button onClick={onClose} className="text-pf-ghost hover:text-pf-ink text-sm w-14 text-left transition-colors">Cancel</button>
+          <h2 className="text-pf-ink font-semibold">{isEdit ? 'Edit Transaction' : 'New Transaction'}</h2>
           <div className="w-14" />
         </div>
 
@@ -156,29 +157,29 @@ export default function TransactionForm({ transaction, categories, buckets, onCl
         <div className="flex-1 overflow-y-auto px-5 pb-8 space-y-4">
 
           <div>
-            <label className="block text-sm font-medium text-slate-400 mb-1.5">Date</label>
+            <label className="block lbl mb-1.5">Date</label>
             <input
               type="date"
               value={date}
               onChange={e => setDate(e.target.value)}
-              className="w-full bg-slate-700 border border-slate-600 text-white rounded-xl px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className={inputCls}
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-400 mb-1.5">Payee / Description</label>
+            <label className="block lbl mb-1.5">Payee / Description</label>
             <input
               ref={payeeRef}
               type="text"
               value={payee}
               onChange={e => setPayee(e.target.value)}
               placeholder="e.g. Whole Foods"
-              className="w-full bg-slate-700 border border-slate-600 text-white rounded-xl px-4 py-3 text-base placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className={inputCls}
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-400 mb-1.5">Amount</label>
+            <label className="block lbl mb-1.5">Amount</label>
             <input
               type="number"
               inputMode="decimal"
@@ -187,20 +188,20 @@ export default function TransactionForm({ transaction, categories, buckets, onCl
               value={amount}
               onChange={e => setAmount(e.target.value)}
               placeholder="0.00"
-              className="w-full bg-slate-700 border border-slate-600 text-white rounded-xl px-4 py-3 text-base placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className={inputCls}
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-400 mb-1.5">Category</label>
+            <label className="block lbl mb-1.5">Category</label>
             <button
               type="button"
               onClick={() => setShowPicker(true)}
-              className="w-full bg-slate-700 border border-slate-600 text-left rounded-xl px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-indigo-500 min-h-[48px]"
+              className="w-full bg-pf-bg border border-pf-line text-left rounded-xl px-4 py-3 text-base focus:outline-none focus:border-pf-gold transition min-h-[48px]"
             >
               {selectedCat
-                ? <span className="text-white">{selectedCat.name}</span>
-                : <span className="text-slate-500">Select a category…</span>
+                ? <span className="text-pf-ink">{selectedCat.name}</span>
+                : <span className="text-pf-ghost">Select a category…</span>
               }
             </button>
           </div>
@@ -208,19 +209,19 @@ export default function TransactionForm({ transaction, categories, buckets, onCl
           {isSavings && (
             <>
               <div>
-                <label className="block text-sm font-medium text-slate-400 mb-1.5">Type</label>
-                <div className="flex rounded-xl overflow-hidden border border-slate-600">
+                <label className="block lbl mb-1.5">Type</label>
+                <div className="flex rounded-xl overflow-hidden border border-pf-line">
                   <button
                     type="button"
                     onClick={() => setIsWithdrawal(false)}
-                    className={`flex-1 py-3 text-base font-medium transition-colors ${!isWithdrawal ? 'bg-indigo-600 text-white' : 'bg-slate-700 text-slate-400'}`}
+                    className={`flex-1 py-3 text-base font-medium transition-colors ${!isWithdrawal ? 'bg-pf-leaf text-pf-bg' : 'bg-pf-card text-pf-ghost'}`}
                   >
                     Contribution
                   </button>
                   <button
                     type="button"
                     onClick={() => setIsWithdrawal(true)}
-                    className={`flex-1 py-3 text-base font-medium transition-colors ${isWithdrawal ? 'bg-red-600 text-white' : 'bg-slate-700 text-slate-400'}`}
+                    className={`flex-1 py-3 text-base font-medium transition-colors ${isWithdrawal ? 'bg-pf-coral text-pf-bg' : 'bg-pf-card text-pf-ghost'}`}
                   >
                     Withdrawal
                   </button>
@@ -230,23 +231,23 @@ export default function TransactionForm({ transaction, categories, buckets, onCl
           )}
 
           <div>
-            <label className="block text-sm font-medium text-slate-400 mb-1.5">Notes <span className="text-slate-600 font-normal">(optional)</span></label>
+            <label className="block lbl mb-1.5">Notes <span className="text-pf-ghost font-normal normal-case tracking-normal">(optional)</span></label>
             <input
               type="text"
               value={notes}
               onChange={e => setNotes(e.target.value)}
               placeholder="Optional note…"
-              className="w-full bg-slate-700 border border-slate-600 text-white rounded-xl px-4 py-3 text-base placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className={inputCls}
             />
           </div>
 
-          {error && <p className="text-red-400 text-sm">{error}</p>}
+          {error && <p className="text-pf-coral text-sm">{error}</p>}
 
           <button
             type="button"
             onClick={handleSave}
             disabled={submitting}
-            className="w-full bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 disabled:opacity-60 text-white font-semibold py-3.5 rounded-xl text-base transition-colors"
+            className="w-full bg-pf-gold hover:bg-pf-gold/90 active:bg-pf-gold/80 disabled:opacity-60 text-pf-bg font-semibold py-3.5 rounded-xl text-base transition-colors"
           >
             {submitting ? 'Saving…' : 'Save'}
           </button>
@@ -256,7 +257,7 @@ export default function TransactionForm({ transaction, categories, buckets, onCl
               type="button"
               onClick={handleDelete}
               disabled={submitting}
-              className="w-full border border-red-700 hover:bg-red-900/30 text-red-400 font-semibold py-3.5 rounded-xl text-base transition-colors"
+              className="w-full border border-pf-coral/50 hover:bg-pf-coral/10 text-pf-coral font-semibold py-3.5 rounded-xl text-base transition-colors"
             >
               Delete
             </button>

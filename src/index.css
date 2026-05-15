@@ -1,1 +1,46 @@
 @import "tailwindcss";
+
+@theme {
+  /* Palette */
+  --color-pf-bg:   #181512;
+  --color-pf-card: #211e1a;
+  --color-pf-line: #2e2a25;
+  --color-pf-ink:  #f0ebe4;
+  --color-pf-dim:  #8a8278;
+  --color-pf-ghost:#5a5550;
+  --color-pf-gold: #c8a96e;
+  --color-pf-leaf: #6aab8a;
+  --color-pf-coral:#c06b6b;
+  --color-pf-sky:  #6a8fc0;
+
+  /* Typography — override Tailwind's sans so every element defaults to DM Mono */
+  --font-sans:    'DM Mono', ui-monospace, 'Courier New', monospace;
+  --font-mono:    'DM Mono', ui-monospace, 'Courier New', monospace;
+  --font-display: 'DM Serif Display', Georgia, serif;
+}
+
+/* Base */
+body {
+  background-color: #181512;
+  color: #f0ebe4;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Reusable section label */
+.lbl {
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #5a5550;
+}
+
+/* Dollar display — DM Serif Display */
+.amt {
+  font-family: 'DM Serif Display', Georgia, serif;
+  letter-spacing: -0.01em;
+}
+
+/* Hide scrollbars (used on nav) */
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+.scrollbar-hide::-webkit-scrollbar { display: none; }

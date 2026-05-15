@@ -5,12 +5,12 @@ import {
 } from 'recharts'
 import type { SavingsData } from '../../hooks/useDashboardSavings'
 
-const CHART_TOOLTIP = { backgroundColor: '#1e293b', border: '1px solid #334155', borderRadius: 8 }
-const AXIS_TICK = { fill: '#64748b', fontSize: 11 }
-const GRID = { stroke: '#1e293b' }
+const CHART_TOOLTIP = { backgroundColor: '#211e1a', border: '1px solid #2e2a25', borderRadius: 8 }
+const AXIS_TICK = { fill: '#5a5550', fontSize: 11 }
+const GRID = { stroke: '#2e2a25' }
 
-const BUCKET_COLORS = ['#6366f1', '#22c55e', '#f59e0b', '#38bdf8', '#ec4899', '#a78bfa']
-const ACCOUNT_COLORS = ['#38bdf8', '#818cf8', '#34d399']
+const BUCKET_COLORS = ['#c8a96e', '#6aab8a', '#6a8fc0', '#c06b6b', '#8a8278', '#f0ebe4']
+const ACCOUNT_COLORS = ['#6a8fc0', '#c8a96e', '#6aab8a']
 
 function fmt(n: number) {
   return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n)
@@ -26,16 +26,16 @@ function fmtMonthShort(monthStr: string) {
 function BucketCard({ name, balance, target, color }: { name: string; balance: number; target: number | null; color: string }) {
   const pct = target ? Math.min(100, (balance / target) * 100) : null
   return (
-    <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700/50">
+    <div className="bg-pf-card rounded-[10px] p-4 border border-pf-line">
       <div className="flex items-start justify-between mb-2">
-        <div className="text-sm font-medium text-slate-200">{name}</div>
+        <div className="text-sm font-medium text-pf-ink">{name}</div>
         <div className="w-2.5 h-2.5 rounded-full mt-1 flex-shrink-0" style={{ backgroundColor: color }} />
       </div>
-      <div className="text-xl font-semibold text-white mb-1">{fmt(balance)}</div>
+      <div className="text-xl text-pf-ink amt mb-1">{fmt(balance)}</div>
       {target && (
         <>
-          <div className="text-xs text-slate-500 mb-2">of {fmt(target)} goal</div>
-          <div className="h-1.5 bg-slate-700 rounded-full overflow-hidden">
+          <div className="text-xs text-pf-ghost mb-2">of {fmt(target)} goal</div>
+          <div className="h-[3px] bg-pf-line rounded-full overflow-hidden">
             <div className="h-full rounded-full" style={{ width: `${pct}%`, backgroundColor: color }} />
           </div>
         </>
@@ -48,9 +48,9 @@ function BucketCard({ name, balance, target, color }: { name: string; balance: n
 
 function SummaryStat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700/50 text-center">
-      <div className="text-xs text-slate-500 mb-1">{label}</div>
-      <div className="text-lg font-semibold text-white">{value}</div>
+    <div className="bg-pf-card rounded-[10px] p-4 border border-pf-line text-center">
+      <div className="lbl mb-1">{label}</div>
+      <div className="text-lg text-pf-ink amt">{value}</div>
     </div>
   )
 }
@@ -69,8 +69,6 @@ export default function SavingsTab({ data }: { data: SavingsData }) {
     totalNetWorth,
   } = data
 
-  // Use account_id as the stable dataKey to avoid any name-lookup mismatch.
-  // Display names (for legend/tooltip) are resolved separately.
   const uniqueAccountIds = [...new Set(investmentSnapshots.map(s => s.account_id))]
   const accountLabelById = new Map<string, string>()
   for (const id of uniqueAccountIds) {
@@ -92,13 +90,11 @@ export default function SavingsTab({ data }: { data: SavingsData }) {
   console.log('[SavingsTab] uniqueAccountIds:', uniqueAccountIds)
   console.log('[SavingsTab] accountLabelById:', Object.fromEntries(accountLabelById))
 
-  // Net worth chart
   const nwChartData = netWorthSnapshots.map(s => ({
     month: s.month,
     netWorth: Number(s.net_worth),
   }))
 
-  // Monthly net savings chart from bucket history (sum of all buckets per month)
   const monthlySavingsBar = bucketHistory.map(row => {
     const total = buckets.reduce((s, b) => {
       const v = row[b.name]
@@ -112,7 +108,7 @@ export default function SavingsTab({ data }: { data: SavingsData }) {
     if (!payload) return null
     return (
       <g transform={`translate(${x},${y})`}>
-        <text x={0} y={0} dy={14} textAnchor="end" fill="#64748b" fontSize={10} transform="rotate(-45)">
+        <text x={0} y={0} dy={14} textAnchor="end" fill="#5a5550" fontSize={10} transform="rotate(-45)">
           {fmtMonthShort(payload.value)}
         </text>
       </g>
@@ -132,7 +128,7 @@ export default function SavingsTab({ data }: { data: SavingsData }) {
 
       {/* Bucket cards */}
       <div className="px-4 mb-6">
-        <div className="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-3">Savings Buckets</div>
+        <div className="lbl mb-3">Savings Buckets</div>
         <div className="grid grid-cols-2 gap-3">
           {buckets.map((b, i) => (
             <BucketCard
@@ -149,8 +145,8 @@ export default function SavingsTab({ data }: { data: SavingsData }) {
       {/* Bucket history stacked area */}
       {bucketHistory.length > 0 && (
         <div className="px-4 mb-6">
-          <div className="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-3">Bucket Balance History</div>
-          <div className="bg-slate-800/30 rounded-xl border border-slate-700/50 p-3">
+          <div className="lbl mb-3">Bucket Balance History</div>
+          <div className="bg-pf-card rounded-[10px] border border-pf-line p-3">
             <ResponsiveContainer width="100%" height={240}>
               <AreaChart data={bucketHistory} margin={{ top: 4, right: 8, bottom: 44, left: 0 }}>
                 <defs>
@@ -178,7 +174,7 @@ export default function SavingsTab({ data }: { data: SavingsData }) {
                 <Legend
                   iconType="square"
                   iconSize={8}
-                  wrapperStyle={{ fontSize: 11, color: '#94a3b8', paddingTop: 8 }}
+                  wrapperStyle={{ fontSize: 11, color: '#5a5550', paddingTop: 8 }}
                 />
                 {buckets.map((b, i) => (
                   <Area
@@ -201,8 +197,8 @@ export default function SavingsTab({ data }: { data: SavingsData }) {
       {/* Investment accounts chart */}
       {invChartData.length > 0 && (
         <div className="px-4 mb-6">
-          <div className="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-3">Investment Accounts</div>
-          <div className="bg-slate-800/30 rounded-xl border border-slate-700/50 p-3">
+          <div className="lbl mb-3">Investment Accounts</div>
+          <div className="bg-pf-card rounded-[10px] border border-pf-line p-3">
             <ResponsiveContainer width="100%" height={220}>
               <LineChart data={invChartData} margin={{ top: 4, right: 8, bottom: 44, left: 0 }}>
                 <CartesianGrid vertical={false} strokeDasharray="3 3" {...GRID} />
@@ -223,7 +219,7 @@ export default function SavingsTab({ data }: { data: SavingsData }) {
                 <Legend
                   iconType="square"
                   iconSize={8}
-                  wrapperStyle={{ fontSize: 11, color: '#94a3b8', paddingTop: 8 }}
+                  wrapperStyle={{ fontSize: 11, color: '#5a5550', paddingTop: 8 }}
                 />
                 {uniqueAccountIds.map((id, i) => (
                   <Line
@@ -246,14 +242,14 @@ export default function SavingsTab({ data }: { data: SavingsData }) {
       {/* Net worth trend */}
       {nwChartData.length > 0 && (
         <div className="px-4 mb-6">
-          <div className="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-3">Net Worth Trend</div>
-          <div className="bg-slate-800/30 rounded-xl border border-slate-700/50 p-3">
+          <div className="lbl mb-3">Net Worth Trend</div>
+          <div className="bg-pf-card rounded-[10px] border border-pf-line p-3">
             <ResponsiveContainer width="100%" height={180}>
               <AreaChart data={nwChartData} margin={{ top: 4, right: 8, bottom: 44, left: 0 }}>
                 <defs>
                   <linearGradient id="nwGrad2" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#22c55e" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="#22c55e" stopOpacity={0} />
+                    <stop offset="5%" stopColor="#6aab8a" stopOpacity={0.3} />
+                    <stop offset="95%" stopColor="#6aab8a" stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid vertical={false} strokeDasharray="3 3" {...GRID} />
@@ -273,7 +269,7 @@ export default function SavingsTab({ data }: { data: SavingsData }) {
                 <Area
                   type="monotone"
                   dataKey="netWorth"
-                  stroke="#22c55e"
+                  stroke="#6aab8a"
                   strokeWidth={2}
                   fill="url(#nwGrad2)"
                   dot={false}
@@ -287,8 +283,8 @@ export default function SavingsTab({ data }: { data: SavingsData }) {
       {/* Monthly savings total bar chart */}
       {monthlySavingsBar.length > 0 && (
         <div className="px-4 mb-6">
-          <div className="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-3">Total Savings Balance by Month</div>
-          <div className="bg-slate-800/30 rounded-xl border border-slate-700/50 p-3">
+          <div className="lbl mb-3">Total Savings Balance by Month</div>
+          <div className="bg-pf-card rounded-[10px] border border-pf-line p-3">
             <ResponsiveContainer width="100%" height={180}>
               <BarChart data={monthlySavingsBar} margin={{ top: 4, right: 8, bottom: 44, left: 0 }}>
                 <CartesianGrid vertical={false} strokeDasharray="3 3" {...GRID} />
@@ -304,9 +300,9 @@ export default function SavingsTab({ data }: { data: SavingsData }) {
                   contentStyle={CHART_TOOLTIP}
                   formatter={(v: any) => [fmt(Number(v)), 'Savings']}
                   labelFormatter={(l: any) => fmtMonthShort(String(l))}
-                  cursor={{ fill: '#334155', opacity: 0.4 }}
+                  cursor={{ fill: '#2e2a25', opacity: 0.6 }}
                 />
-                <Bar dataKey="total" fill="#6366f1" radius={[3, 3, 0, 0]} />
+                <Bar dataKey="total" fill="#c8a96e" radius={[3, 3, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>

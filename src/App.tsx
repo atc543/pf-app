@@ -17,12 +17,12 @@ class ErrorBoundary extends Component<{ children: ReactNode }, { hasError: boole
   render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center gap-4 px-6 text-center">
-          <div className="text-2xl text-slate-400">Something went wrong</div>
-          <p className="text-slate-500 text-sm">Reload the page to try again.</p>
+        <div className="min-h-screen bg-pf-bg flex flex-col items-center justify-center gap-4 px-6 text-center">
+          <div className="font-display text-pf-dim text-2xl">Something went wrong</div>
+          <p className="text-pf-ghost text-sm">Reload the page to try again.</p>
           <button
             onClick={() => window.location.reload()}
-            className="mt-2 px-5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-sm transition-colors"
+            className="mt-2 px-5 py-2 bg-pf-gold hover:bg-pf-gold/90 text-pf-bg rounded-xl text-sm transition-colors"
           >
             Reload
           </button>

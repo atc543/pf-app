@@ -51,7 +51,7 @@ function BudgetCell({ catId, budgeted, editing, onStartEdit, onChange, onCommit,
           if (e.key === 'Escape') onCancel()
         }}
         autoFocus
-        className="w-24 bg-slate-600 border border-indigo-500 text-white text-right rounded-lg px-2 py-1 text-sm focus:outline-none"
+        className="w-24 bg-pf-bg border border-pf-gold text-pf-ink text-right rounded-lg px-2 py-1 text-sm focus:outline-none"
       />
     )
   }
@@ -59,11 +59,11 @@ function BudgetCell({ catId, budgeted, editing, onStartEdit, onChange, onCommit,
     <button
       type="button"
       onClick={() => onStartEdit(catId)}
-      className="min-w-[6rem] min-h-[44px] flex items-center justify-end text-sm hover:text-indigo-300 transition-colors"
+      className="min-w-[6rem] min-h-[44px] flex items-center justify-end text-sm hover:text-pf-gold transition-colors"
     >
       {budgeted === 0
-        ? <span className="text-slate-700">—</span>
-        : <span className="text-white">{fmt(budgeted)}</span>}
+        ? <span className="text-pf-ghost">—</span>
+        : <span className="text-pf-ink amt">{fmt(budgeted)}</span>}
     </button>
   )
 }
@@ -86,16 +86,16 @@ function CategoryRow({ cat, budgeted, spent, editing, onStartEdit, onChange, onC
   const cellProps = { catId: cat.id, budgeted, editing, onStartEdit, onChange, onCommit, onCancel }
 
   return (
-    <div className="border-b border-slate-800/60">
+    <div className="border-b border-pf-line/60">
       <div className="flex items-center gap-2 px-4 min-h-[52px]">
-        <span className="flex-1 text-sm text-slate-200">{cat.name}</span>
+        <span className="flex-1 text-sm text-pf-ink">{cat.name}</span>
 
         <div className="flex flex-col items-end md:hidden">
           <BudgetCell {...cellProps} />
           <div className="text-xs flex gap-2 pb-1.5">
-            {spent > 0 && <span className="text-slate-500">Spent {fmt(spent)}</span>}
+            {spent > 0 && <span className="text-pf-ghost">Spent {fmt(spent)}</span>}
             {budgeted > 0 && (
-              <span className={over ? 'text-red-400' : 'text-slate-500'}>
+              <span className={over ? 'text-pf-coral' : 'text-pf-ghost'}>
                 Left {fmt(remaining)}
               </span>
             )}
@@ -104,10 +104,10 @@ function CategoryRow({ cat, budgeted, spent, editing, onStartEdit, onChange, onC
 
         <div className="hidden md:flex items-center">
           <div className="w-28 flex justify-end"><BudgetCell {...cellProps} /></div>
-          <div className="w-24 text-right text-sm px-2 text-slate-400">
-            {spent > 0 ? fmt(spent) : <span className="text-slate-700">—</span>}
+          <div className="w-24 text-right text-sm px-2 text-pf-dim">
+            {spent > 0 ? fmt(spent) : <span className="text-pf-ghost">—</span>}
           </div>
-          <div className={`w-24 text-right text-sm px-2 ${budgeted > 0 ? (over ? 'text-red-400 font-medium' : 'text-slate-300') : 'text-slate-700'}`}>
+          <div className={`w-24 text-right text-sm px-2 ${budgeted > 0 ? (over ? 'text-pf-coral font-medium' : 'text-pf-dim') : 'text-pf-ghost'}`}>
             {budgeted > 0 ? fmt(remaining) : '—'}
           </div>
         </div>
@@ -115,9 +115,9 @@ function CategoryRow({ cat, budgeted, spent, editing, onStartEdit, onChange, onC
 
       {budgeted > 0 && (
         <div className="px-4 pb-2.5">
-          <div className="h-1 bg-slate-800 rounded-full overflow-hidden">
+          <div className="h-[3px] bg-pf-line rounded-full overflow-hidden">
             <div
-              className={`h-full rounded-full ${over ? 'bg-red-500' : 'bg-indigo-500'}`}
+              className={`h-full rounded-full ${over ? 'bg-pf-coral' : 'bg-pf-leaf'}`}
               style={{ width: `${pct}%` }}
             />
           </div>
@@ -253,18 +253,18 @@ export default function BudgetPage() {
   return (
     <div className="max-w-2xl mx-auto pb-8">
 
-      <div className="sticky top-0 z-10 bg-slate-900/95 backdrop-blur-sm border-b border-slate-800 px-4 py-3 flex items-center justify-between">
+      <div className="sticky top-0 z-10 bg-pf-bg/95 backdrop-blur-sm border-b border-pf-line px-4 py-3 flex items-center justify-between">
         <button
           onClick={goToPrev}
-          className="text-slate-400 hover:text-white p-2 rounded-lg transition-colors"
+          className="text-pf-ghost hover:text-pf-ink p-2 rounded-lg transition-colors"
           aria-label="Previous month"
         >
           <span className="text-xl font-light leading-none">‹</span>
         </button>
-        <span className="text-white font-semibold">{toMonthLabel(year, month)}</span>
+        <span className="text-pf-ink font-medium">{toMonthLabel(year, month)}</span>
         <button
           onClick={goToNext}
-          className="text-slate-400 hover:text-white p-2 rounded-lg transition-colors"
+          className="text-pf-ghost hover:text-pf-ink p-2 rounded-lg transition-colors"
           aria-label="Next month"
         >
           <span className="text-xl font-light leading-none">›</span>
@@ -272,13 +272,13 @@ export default function BudgetPage() {
       </div>
 
       <div className="px-4 pt-3 pb-2 flex flex-wrap items-center gap-3">
-        <div className="flex rounded-xl overflow-hidden border border-slate-700">
+        <div className="flex rounded-xl overflow-hidden border border-pf-line">
           {(['all', 'fixed', 'variable'] as Filter[]).map(f => (
             <button
               key={f}
               onClick={() => setFilter(f)}
               className={`px-4 py-2 text-sm font-medium capitalize transition-colors ${
-                filter === f ? 'bg-indigo-600 text-white' : 'bg-slate-800 text-slate-400 hover:text-white'
+                filter === f ? 'bg-pf-gold text-pf-bg' : 'bg-pf-card text-pf-ghost hover:text-pf-ink'
               }`}
             >
               {f.charAt(0).toUpperCase() + f.slice(1)}
@@ -288,12 +288,12 @@ export default function BudgetPage() {
         <div className="flex items-center gap-3 flex-1 flex-wrap">
           <button
             onClick={copyPrevMonth}
-            className="text-sm text-indigo-400 hover:text-indigo-300 transition-colors"
+            className="text-sm text-pf-gold hover:text-pf-gold/80 transition-colors"
           >
             Copy from previous month
           </button>
-          {saveState === 'saved' && <span className="text-xs text-green-400">Saved</span>}
-          {copyStatus && <span className="text-xs text-slate-400">{copyStatus}</span>}
+          {saveState === 'saved' && <span className="text-xs text-pf-leaf">Saved</span>}
+          {copyStatus && <span className="text-xs text-pf-dim">{copyStatus}</span>}
         </div>
       </div>
 
@@ -301,30 +301,30 @@ export default function BudgetPage() {
         <LoadingSpinner />
       ) : error ? (
         <div className="flex flex-col items-center justify-center h-40 text-center px-6">
-          <p className="text-red-400 mb-1">Failed to load budget</p>
-          <p className="text-slate-600 text-sm">{error}</p>
+          <p className="text-pf-coral mb-1">Failed to load budget</p>
+          <p className="text-pf-ghost text-sm">{error}</p>
         </div>
       ) : budgets.size === 0 ? (
         <div className="flex flex-col items-center justify-center h-40 text-center px-6">
-          <p className="text-slate-400 mb-1">No budget set for this month</p>
-          <p className="text-slate-600 text-sm">Use "Copy from previous month" above to get started.</p>
+          <p className="text-pf-dim mb-1">No budget set for this month</p>
+          <p className="text-pf-ghost text-sm">Use "Copy from previous month" above to get started.</p>
         </div>
       ) : (
         <>
-          <div className="hidden md:flex items-center px-4 py-2 border-b border-slate-800/60 text-xs text-slate-500 uppercase tracking-wider">
-            <span className="flex-1">Category</span>
-            <span className="w-28 text-right">Budgeted</span>
-            <span className="w-24 text-right px-2">Spent</span>
-            <span className="w-24 text-right px-2">Remaining</span>
+          <div className="hidden md:flex items-center px-4 py-2 border-b border-pf-line/60">
+            <span className="flex-1 lbl">Category</span>
+            <span className="w-28 text-right lbl">Budgeted</span>
+            <span className="w-24 text-right px-2 lbl">Spent</span>
+            <span className="w-24 text-right px-2 lbl">Remaining</span>
           </div>
 
           {visibleIncomeCategories.length > 0 && (
             <div>
-              <div className="flex items-center justify-between px-4 py-2.5 bg-slate-800/40 border-b border-slate-800">
-                <span className="text-xs font-semibold text-slate-500 uppercase tracking-widest">Income</span>
+              <div className="flex items-center justify-between px-4 py-2.5 bg-pf-card/40 border-b border-pf-line">
+                <span className="lbl">Income</span>
                 <div className="flex gap-3 text-xs">
-                  <span className="text-slate-500">Budget {fmt(incomeTotals.budgeted)}</span>
-                  <span className="text-green-400">Earned {fmt(incomeTotals.spent)}</span>
+                  <span className="text-pf-ghost">Budget {fmt(incomeTotals.budgeted)}</span>
+                  <span className="text-pf-leaf">Earned {fmt(incomeTotals.spent)}</span>
                 </div>
               </div>
               {visibleIncomeCategories.map(cat => (
@@ -352,15 +352,15 @@ export default function BudgetPage() {
                 <button
                   type="button"
                   onClick={() => toggleGroup(parent.id)}
-                  className="w-full flex items-center justify-between px-4 py-2.5 bg-slate-800/40 border-b border-slate-800 hover:bg-slate-800/70 transition-colors min-h-[44px]"
+                  className="w-full flex items-center justify-between px-4 py-2.5 bg-pf-card/40 border-b border-pf-line hover:bg-pf-card/70 transition-colors min-h-[44px]"
                 >
                   <div className="flex items-center gap-2">
-                    <span className="text-slate-600 text-xs">{isOpen ? '▼' : '▶'}</span>
-                    <span className="text-xs font-semibold text-slate-500 uppercase tracking-widest">{parent.name}</span>
+                    <span className="text-pf-ghost text-xs">{isOpen ? '▼' : '▶'}</span>
+                    <span className="lbl">{parent.name}</span>
                   </div>
                   <div className="flex gap-3 text-xs">
-                    <span className="text-slate-500">{fmt(sub.budgeted)}</span>
-                    <span className={subOver ? 'text-red-400' : 'text-slate-500'}>{fmt(sub.remaining)} left</span>
+                    <span className="text-pf-ghost">{fmt(sub.budgeted)}</span>
+                    <span className={subOver ? 'text-pf-coral' : 'text-pf-ghost'}>{fmt(sub.remaining)} left</span>
                   </div>
                 </button>
                 {isOpen && visibleChildren.map(cat => (
@@ -376,21 +376,21 @@ export default function BudgetPage() {
             )
           })}
 
-          <div className="mx-4 mt-5 rounded-xl border border-slate-700 bg-slate-800/30 p-4">
+          <div className="mx-4 mt-5 rounded-[10px] border border-pf-line bg-pf-card p-4">
             <div className="flex items-center justify-between">
-              <span className="text-sm font-semibold text-slate-300">Total</span>
+              <span className="text-sm font-semibold text-pf-dim">Total</span>
               <div className="flex gap-5">
                 <div className="text-right">
-                  <div className="text-xs text-slate-500 mb-0.5">Budgeted</div>
-                  <div className="text-sm font-medium text-white">{fmt(grandTotals.budgeted)}</div>
+                  <div className="lbl mb-0.5">Budgeted</div>
+                  <div className="text-sm text-pf-ink amt">{fmt(grandTotals.budgeted)}</div>
                 </div>
                 <div className="text-right">
-                  <div className="text-xs text-slate-500 mb-0.5">Spent</div>
-                  <div className="text-sm text-slate-300">{fmt(grandTotals.spent)}</div>
+                  <div className="lbl mb-0.5">Spent</div>
+                  <div className="text-sm text-pf-dim">{fmt(grandTotals.spent)}</div>
                 </div>
                 <div className="text-right">
-                  <div className="text-xs text-slate-500 mb-0.5">Remaining</div>
-                  <div className={`text-sm font-medium ${grandTotals.remaining < 0 ? 'text-red-400' : 'text-green-400'}`}>
+                  <div className="lbl mb-0.5">Remaining</div>
+                  <div className={`text-sm font-medium ${grandTotals.remaining < 0 ? 'text-pf-coral' : 'text-pf-leaf'}`}>
                     {fmt(grandTotals.remaining)}
                   </div>
                 </div>

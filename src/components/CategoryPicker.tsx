@@ -54,8 +54,8 @@ export default function CategoryPicker({ categories, selectedId, onSelect, onClo
       onClick={() => select(cat.id)}
       className={`w-full text-left px-6 py-3.5 text-base transition-colors min-h-[44px] ${
         selectedId === cat.id
-          ? 'bg-indigo-600 text-white'
-          : 'text-slate-200 active:bg-slate-700'
+          ? 'bg-pf-gold/20 text-pf-gold'
+          : 'text-pf-ink active:bg-pf-card'
       }`}
     >
       {cat.name}
@@ -66,15 +66,15 @@ export default function CategoryPicker({ categories, selectedId, onSelect, onClo
     <button
       key={cat.id}
       onClick={() => toggle(cat.id)}
-      className="w-full text-left px-4 py-3.5 flex items-center justify-between text-slate-300 font-medium active:bg-slate-800 transition-colors min-h-[44px]"
+      className="w-full text-left px-4 py-3.5 flex items-center justify-between text-pf-dim font-medium active:bg-pf-card transition-colors min-h-[44px]"
     >
       <span>{cat.name}</span>
-      <span className="text-slate-500 text-sm">{expanded.has(cat.id) ? '▲' : '▼'}</span>
+      <span className="text-pf-ghost text-sm">{expanded.has(cat.id) ? '▲' : '▼'}</span>
     </button>
   )
 
   const sectionLabel = (text: string) => (
-    <div className="px-4 pt-4 pb-1 text-xs font-semibold text-slate-500 uppercase tracking-widest">
+    <div className="px-4 pt-4 pb-1 lbl">
       {text}
     </div>
   )
@@ -82,11 +82,11 @@ export default function CategoryPicker({ categories, selectedId, onSelect, onClo
   return (
     <>
       <div className="fixed inset-0 z-60 bg-black/50" onClick={onClose} />
-      <div className="fixed inset-0 z-70 flex flex-col bg-slate-900 md:inset-auto md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:w-[420px] md:max-h-[80vh] md:rounded-2xl md:border md:border-slate-700 md:shadow-2xl">
+      <div className="fixed inset-0 z-70 flex flex-col bg-pf-bg md:inset-auto md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:w-[420px] md:max-h-[80vh] md:rounded-2xl md:border md:border-pf-line md:shadow-2xl">
 
-        <div className="flex items-center justify-between px-4 py-4 border-b border-slate-800 shrink-0">
-          <h2 className="text-lg font-semibold text-white">Category</h2>
-          <button onClick={onClose} className="text-slate-400 hover:text-white text-2xl leading-none w-8 h-8 flex items-center justify-center">×</button>
+        <div className="flex items-center justify-between px-4 py-4 border-b border-pf-line shrink-0">
+          <h2 className="text-lg text-pf-ink">Category</h2>
+          <button onClick={onClose} className="text-pf-ghost hover:text-pf-ink text-2xl leading-none w-8 h-8 flex items-center justify-center transition-colors">×</button>
         </div>
 
         <div className="flex-1 overflow-y-auto pb-8">

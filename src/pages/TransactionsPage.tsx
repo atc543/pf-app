@@ -14,9 +14,17 @@ function fmt(amount: number) {
 function amountDisplay(tx: Transaction): { text: string; color: string } {
   const type = tx.categories?.type
   const amt = Number(tx.amount)
-  if (type === 'income') return { text: `+${fmt(amt)}`, color: 'text-green-400' }
-  if (type === 'savings' && amt > 0) return { text: `+${fmt(amt)}`, color: 'text-indigo-400' }
-  return { text: `-${fmt(amt)}`, color: 'text-red-400' }
+  if (type === 'income') return { text: `+${fmt(amt)}`, color: 'text-pf-gold' }
+  if (type === 'savings' && amt > 0) return { text: `+${fmt(amt)}`, color: 'text-pf-leaf' }
+  return { text: `−${fmt(amt)}`, color: 'text-pf-coral' }
+}
+
+function dotColor(tx: Transaction): string {
+  const type = tx.categories?.type
+  const amt = Number(tx.amount)
+  if (type === 'income') return '#c8a96e'          // gold — earned income
+  if (type === 'savings' && amt > 0) return '#6aab8a' // leaf — savings contribution
+  return '#2e2a25'                                  // border — expense / withdrawal
 }
 
 function fmtDate(dateStr: string) {
@@ -58,8 +66,8 @@ export default function TransactionsPage() {
   if (error) {
     return (
       <div className="flex flex-col items-center justify-center h-64 text-center px-6">
-        <p className="text-red-400 mb-1">Failed to load transactions</p>
-        <p className="text-slate-600 text-sm">{error}</p>
+        <p className="text-pf-coral mb-1">Failed to load transactions</p>
+        <p className="text-pf-ghost text-sm">{error}</p>
       </div>
     )
   }
@@ -67,8 +75,8 @@ export default function TransactionsPage() {
   if (transactions.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center h-64 text-center px-6">
-        <p className="text-slate-400 text-lg mb-1">No transactions yet</p>
-        <p className="text-slate-600 text-sm">Tap + to add your first one.</p>
+        <p className="text-pf-dim mb-1">No transactions yet</p>
+        <p className="text-pf-ghost text-sm">Tap + to add your first one.</p>
       </div>
     )
   }
@@ -80,11 +88,11 @@ export default function TransactionsPage() {
       {groups.map(group => (
         <div key={group.key}>
           {/* Month header */}
-          <div className="sticky top-0 bg-slate-900/95 backdrop-blur-sm px-4 py-2.5 border-b border-slate-800 flex items-center justify-between">
-            <span className="text-white font-semibold text-sm">{group.label}</span>
+          <div className="sticky top-0 bg-pf-bg/95 backdrop-blur-sm px-6 py-2.5 border-b border-pf-line flex items-center justify-between">
+            <span className="text-pf-ink text-sm font-medium">{group.label}</span>
             <div className="flex gap-3 text-xs">
-              <span className="text-green-400">+{fmt(group.income)}</span>
-              <span className="text-red-400">-{fmt(group.spent)}</span>
+              <span className="text-pf-gold amt">+{fmt(group.income)}</span>
+              <span className="text-pf-coral amt">−{fmt(group.spent)}</span>
             </div>
           </div>
 
@@ -95,14 +103,19 @@ export default function TransactionsPage() {
               <button
                 key={tx.id}
                 onClick={() => openEdit(tx)}
-                className="w-full px-4 py-3.5 flex items-center gap-3 border-b border-slate-800/60 hover:bg-slate-800/40 active:bg-slate-800 transition-colors text-left"
+                className="w-full px-6 py-3.5 flex items-center gap-3 border-b border-pf-line/60 hover:bg-pf-card/60 active:bg-pf-card transition-colors text-left"
               >
-                <div className="shrink-0 text-slate-500 text-xs w-10">{fmtDate(tx.date)}</div>
+                {/* Colored dot */}
+                <div
+                  className="shrink-0 w-1.5 h-1.5 rounded-full"
+                  style={{ backgroundColor: dotColor(tx) }}
+                />
+                <div className="shrink-0 text-pf-ghost text-xs w-9">{fmtDate(tx.date)}</div>
                 <div className="flex-1 min-w-0">
-                  <div className="text-white text-sm font-medium truncate">{tx.payee}</div>
-                  <div className="text-slate-500 text-xs truncate">{tx.categories?.name}</div>
+                  <div className="text-pf-ink text-sm truncate">{tx.payee}</div>
+                  <div className="text-pf-ghost text-xs truncate">{tx.categories?.name}</div>
                 </div>
-                <div className={`shrink-0 text-sm font-medium ${color}`}>{text}</div>
+                <div className={`shrink-0 text-sm font-medium amt ${color}`}>{text}</div>
               </button>
             )
           })}
