@@ -1,8 +1,12 @@
 import { useState } from 'react'
 import { useDashboardOverview } from '../hooks/useDashboardOverview'
 import { useDashboardSavings } from '../hooks/useDashboardSavings'
+import { useDashboardSpending } from '../hooks/useDashboardSpending'
+import { useDashboardMonthlyDetail } from '../hooks/useDashboardMonthlyDetail'
 import OverviewTab from '../components/dashboard/OverviewTab'
 import SavingsTab from '../components/dashboard/SavingsTab'
+import SpendingTab from '../components/dashboard/SpendingTab'
+import MonthlyDetailTab from '../components/dashboard/MonthlyDetailTab'
 
 type Tab = 'overview' | 'savings' | 'spending' | 'trends' | 'monthlyDetail' | 'recommendations' | 'forecast'
 
@@ -30,6 +34,8 @@ export default function DashboardPage() {
   const [activeTab, setActiveTab] = useState<Tab>('overview')
   const overviewData = useDashboardOverview()
   const savingsData = useDashboardSavings()
+  const spendingData = useDashboardSpending()
+  const monthlyDetailData = useDashboardMonthlyDetail()
 
   return (
     <div className="max-w-2xl mx-auto">
@@ -63,9 +69,17 @@ export default function DashboardPage() {
           ? <div className="flex items-center justify-center h-40"><span className="text-slate-600">Loading…</span></div>
           : <SavingsTab data={savingsData} />
       )}
-      {activeTab === 'spending' && <Placeholder label="Spending" />}
-      {activeTab === 'trends' && <Placeholder label="Trends" />}
-      {activeTab === 'monthlyDetail' && <Placeholder label="Monthly Detail" />}
+      {activeTab === 'spending' && (
+        spendingData.loading
+          ? <div className="flex items-center justify-center h-40"><span className="text-slate-600">Loading…</span></div>
+          : <SpendingTab data={spendingData} />
+      )}
+      {activeTab === 'trends' && <Placeholder label="Coming in next update" />}
+      {activeTab === 'monthlyDetail' && (
+        monthlyDetailData.loading
+          ? <div className="flex items-center justify-center h-40"><span className="text-slate-600">Loading…</span></div>
+          : <MonthlyDetailTab data={monthlyDetailData} />
+      )}
       {activeTab === 'recommendations' && <Placeholder label="Recommendations" />}
       {activeTab === 'forecast' && <Placeholder label="Forecast" />}
     </div>
