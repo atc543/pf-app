@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { supabase } from '../lib/supabase'
 import { useBudget } from '../hooks/useBudget'
 import { useCategories } from '../hooks/useCategories'
+import LoadingSpinner from '../components/LoadingSpinner'
 import type { Category } from '../types'
 
 type Filter = 'all' | 'fixed' | 'variable'
@@ -137,7 +138,7 @@ export default function BudgetPage() {
   const [collapsed, setCollapsed] = useState<Set<string>>(new Set())
 
   const ms = toMonthStr(year, month)
-  const { budgets, spentMap, loading, refetch } = useBudget(ms)
+  const { budgets, spentMap, loading, error, refetch } = useBudget(ms)
   const { categories } = useCategories()
 
   function goToPrev() { const [y, m] = shiftMonth(year, month, -1); setYear(y); setMonth(m) }
@@ -297,8 +298,16 @@ export default function BudgetPage() {
       </div>
 
       {loading ? (
-        <div className="flex items-center justify-center h-40">
-          <span className="text-slate-600">Loading…</span>
+        <LoadingSpinner />
+      ) : error ? (
+        <div className="flex flex-col items-center justify-center h-40 text-center px-6">
+          <p className="text-red-400 mb-1">Failed to load budget</p>
+          <p className="text-slate-600 text-sm">{error}</p>
+        </div>
+      ) : budgets.size === 0 ? (
+        <div className="flex flex-col items-center justify-center h-40 text-center px-6">
+          <p className="text-slate-400 mb-1">No budget set for this month</p>
+          <p className="text-slate-600 text-sm">Use "Copy from previous month" above to get started.</p>
         </div>
       ) : (
         <>

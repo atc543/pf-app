@@ -20,6 +20,7 @@ export interface RecommendationsData {
   suggestedTotal: number
   medianIncome: number
   loading: boolean
+  error: string | null
 }
 
 function median(vals: number[]): number {
@@ -52,10 +53,11 @@ type RawBudget = {
 
 export function useDashboardRecommendations(): RecommendationsData {
   const [data, setData] = useState<RecommendationsData>({
-    fixed: [], variable: [], currentTotal: 0, suggestedTotal: 0, medianIncome: 0, loading: true,
+    fixed: [], variable: [], currentTotal: 0, suggestedTotal: 0, medianIncome: 0, loading: true, error: null,
   })
 
   const load = useCallback(async () => {
+    try {
     const [{ data: catData }, { data: budgetData }, { data: txData }, { data: tpmData }] = await Promise.all([
       supabase.from('categories').select('id, name, type, is_fixed, parent_category_id'),
       supabase.from('monthly_budgets').select('month, category_id, budgeted_amount'),
@@ -140,7 +142,10 @@ export function useDashboardRecommendations(): RecommendationsData {
     const currentTotal = allRecs.reduce((s, r) => s + (r.currentBudget ?? 0), 0)
     const suggestedTotal = allRecs.reduce((s, r) => s + r.suggested, 0)
 
-    setData({ fixed: fixedLeaves, variable: varLeaves, currentTotal, suggestedTotal, medianIncome, loading: false })
+    setData({ fixed: fixedLeaves, variable: varLeaves, currentTotal, suggestedTotal, medianIncome, loading: false, error: null })
+    } catch (err) {
+      setData(prev => ({ ...prev, loading: false, error: err instanceof Error ? err.message : 'Failed to load' }))
+    }
   }, [])
 
   useEffect(() => { load() }, [load])

@@ -21,6 +21,7 @@ export interface OverviewData {
   avgGiving: number
   netWorthSnapshots: NetWorthSnapshot[]
   loading: boolean
+  error: string | null
 }
 
 function median(nums: number[]): number {
@@ -41,9 +42,11 @@ export function useDashboardOverview(): OverviewData {
     avgGiving: 0,
     netWorthSnapshots: [],
     loading: true,
+    error: null,
   })
 
   const load = useCallback(async () => {
+    try {
     const [
       { data: txData },
       { data: tpmData },
@@ -116,7 +119,11 @@ export function useDashboardOverview(): OverviewData {
       avgGiving,
       netWorthSnapshots: (nwData ?? []) as NetWorthSnapshot[],
       loading: false,
+      error: null,
     })
+    } catch (err) {
+      setData(prev => ({ ...prev, loading: false, error: err instanceof Error ? err.message : 'Failed to load' }))
+    }
   }, [])
 
   useEffect(() => { load() }, [load])

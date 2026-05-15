@@ -5,14 +5,21 @@ import type { Transaction } from '../types'
 export function useTransactions() {
   const [transactions, setTransactions] = useState<Transaction[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   const load = useCallback(async () => {
-    const { data } = await supabase
-      .from('transactions')
-      .select('*, categories(*)')
-      .order('date', { ascending: false })
-      .order('created_at', { ascending: false })
-    setTransactions((data as unknown as Transaction[]) ?? [])
+    try {
+      const { data, error: sbErr } = await supabase
+        .from('transactions')
+        .select('*, categories(*)')
+        .order('date', { ascending: false })
+        .order('created_at', { ascending: false })
+      if (sbErr) throw sbErr
+      setTransactions((data as unknown as Transaction[]) ?? [])
+      setError(null)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to load transactions')
+    }
   }, [])
 
   useEffect(() => {
@@ -26,5 +33,5 @@ export function useTransactions() {
     return () => { supabase.removeChannel(channel) }
   }, [load])
 
-  return { transactions, loading, refetch: load }
+  return { transactions, loading, error, refetch: load }
 }

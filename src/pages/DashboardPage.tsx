@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { lazy, Suspense, useState } from 'react'
 import { useDashboardOverview } from '../hooks/useDashboardOverview'
 import { useDashboardSavings } from '../hooks/useDashboardSavings'
 import { useDashboardSpending } from '../hooks/useDashboardSpending'
@@ -6,30 +6,30 @@ import { useDashboardMonthlyDetail } from '../hooks/useDashboardMonthlyDetail'
 import { useDashboardRecommendations } from '../hooks/useDashboardRecommendations'
 import { useDashboardForecast } from '../hooks/useDashboardForecast'
 import OverviewTab from '../components/dashboard/OverviewTab'
-import SavingsTab from '../components/dashboard/SavingsTab'
-import SpendingTab from '../components/dashboard/SpendingTab'
-import MonthlyDetailTab from '../components/dashboard/MonthlyDetailTab'
-import RecommendationsTab from '../components/dashboard/RecommendationsTab'
-import ForecastTab from '../components/dashboard/ForecastTab'
+import LoadingSpinner from '../components/LoadingSpinner'
 
-type Tab = 'overview' | 'savings' | 'spending' | 'trends' | 'monthlyDetail' | 'recommendations' | 'forecast'
+const SavingsTab = lazy(() => import('../components/dashboard/SavingsTab'))
+const SpendingTab = lazy(() => import('../components/dashboard/SpendingTab'))
+const MonthlyDetailTab = lazy(() => import('../components/dashboard/MonthlyDetailTab'))
+const RecommendationsTab = lazy(() => import('../components/dashboard/RecommendationsTab'))
+const ForecastTab = lazy(() => import('../components/dashboard/ForecastTab'))
+
+type Tab = 'overview' | 'savings' | 'spending' | 'monthlyDetail' | 'recommendations' | 'forecast'
 
 const TABS: { id: Tab; label: string }[] = [
   { id: 'overview', label: 'Overview' },
   { id: 'savings', label: 'Savings' },
   { id: 'spending', label: 'Spending' },
-  { id: 'trends', label: 'Trends' },
   { id: 'monthlyDetail', label: 'Monthly Detail' },
   { id: 'recommendations', label: 'Recommendations' },
   { id: 'forecast', label: 'Forecast' },
 ]
 
-function Placeholder({ label }: { label: string }) {
+function TabError({ message }: { message: string }) {
   return (
-    <div className="flex flex-col items-center justify-center h-64 text-slate-600">
-      <div className="text-4xl mb-3">🔜</div>
-      <div className="font-medium">{label}</div>
-      <div className="text-sm mt-1">Coming soon</div>
+    <div className="flex flex-col items-center justify-center h-40 text-center px-6">
+      <p className="text-red-400 mb-1">Failed to load</p>
+      <p className="text-slate-600 text-sm">{message}</p>
     </div>
   )
 }
@@ -66,35 +66,49 @@ export default function DashboardPage() {
 
       {/* Tab content */}
       {activeTab === 'overview' && (
-        overviewData.loading
-          ? <div className="flex items-center justify-center h-40"><span className="text-slate-600">Loading…</span></div>
-          : <OverviewTab data={overviewData} />
+        overviewData.loading ? <LoadingSpinner />
+        : overviewData.error ? <TabError message={overviewData.error} />
+        : <OverviewTab data={overviewData} />
       )}
+
       {activeTab === 'savings' && (
-        savingsData.loading
-          ? <div className="flex items-center justify-center h-40"><span className="text-slate-600">Loading…</span></div>
-          : <SavingsTab data={savingsData} />
+        <Suspense fallback={<LoadingSpinner />}>
+          {savingsData.loading ? <LoadingSpinner />
+          : savingsData.error ? <TabError message={savingsData.error} />
+          : <SavingsTab data={savingsData} />}
+        </Suspense>
       )}
+
       {activeTab === 'spending' && (
-        spendingData.loading
-          ? <div className="flex items-center justify-center h-40"><span className="text-slate-600">Loading…</span></div>
-          : <SpendingTab data={spendingData} />
+        <Suspense fallback={<LoadingSpinner />}>
+          {spendingData.loading ? <LoadingSpinner />
+          : spendingData.error ? <TabError message={spendingData.error} />
+          : <SpendingTab data={spendingData} />}
+        </Suspense>
       )}
-      {activeTab === 'trends' && <Placeholder label="Coming in next update" />}
+
       {activeTab === 'monthlyDetail' && (
-        monthlyDetailData.loading
-          ? <div className="flex items-center justify-center h-40"><span className="text-slate-600">Loading…</span></div>
-          : <MonthlyDetailTab data={monthlyDetailData} />
+        <Suspense fallback={<LoadingSpinner />}>
+          {monthlyDetailData.loading ? <LoadingSpinner />
+          : monthlyDetailData.error ? <TabError message={monthlyDetailData.error} />
+          : <MonthlyDetailTab data={monthlyDetailData} />}
+        </Suspense>
       )}
+
       {activeTab === 'recommendations' && (
-        recommendationsData.loading
-          ? <div className="flex items-center justify-center h-40"><span className="text-slate-600">Loading…</span></div>
-          : <RecommendationsTab data={recommendationsData} />
+        <Suspense fallback={<LoadingSpinner />}>
+          {recommendationsData.loading ? <LoadingSpinner />
+          : recommendationsData.error ? <TabError message={recommendationsData.error} />
+          : <RecommendationsTab data={recommendationsData} />}
+        </Suspense>
       )}
+
       {activeTab === 'forecast' && (
-        forecastData.loading
-          ? <div className="flex items-center justify-center h-40"><span className="text-slate-600">Loading…</span></div>
-          : <ForecastTab data={forecastData} />
+        <Suspense fallback={<LoadingSpinner />}>
+          {forecastData.loading ? <LoadingSpinner />
+          : forecastData.error ? <TabError message={forecastData.error} />
+          : <ForecastTab data={forecastData} />}
+        </Suspense>
       )}
     </div>
   )

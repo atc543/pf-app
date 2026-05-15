@@ -1,5 +1,6 @@
 import { useOutletContext } from 'react-router-dom'
 import { useTransactions } from '../hooks/useTransactions'
+import LoadingSpinner from '../components/LoadingSpinner'
 import type { Transaction } from '../types'
 
 interface LayoutContext {
@@ -50,12 +51,15 @@ function groupByMonth(transactions: Transaction[]): MonthGroup[] {
 
 export default function TransactionsPage() {
   const { openEdit } = useOutletContext<LayoutContext>()
-  const { transactions, loading } = useTransactions()
+  const { transactions, loading, error } = useTransactions()
 
-  if (loading) {
+  if (loading) return <LoadingSpinner />
+
+  if (error) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <span className="text-slate-600">Loading…</span>
+      <div className="flex flex-col items-center justify-center h-64 text-center px-6">
+        <p className="text-red-400 mb-1">Failed to load transactions</p>
+        <p className="text-slate-600 text-sm">{error}</p>
       </div>
     )
   }

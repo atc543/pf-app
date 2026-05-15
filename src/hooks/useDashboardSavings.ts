@@ -17,6 +17,7 @@ export interface SavingsData {
   totalInvestments: number
   totalNetWorth: number
   loading: boolean
+  error: string | null
 }
 
 export function useDashboardSavings(): SavingsData {
@@ -30,9 +31,11 @@ export function useDashboardSavings(): SavingsData {
     totalInvestments: 0,
     totalNetWorth: 0,
     loading: true,
+    error: null,
   })
 
   const load = useCallback(async () => {
+    try {
     const [
       { data: bucketsData },
       { data: invAccountsData },
@@ -141,7 +144,11 @@ export function useDashboardSavings(): SavingsData {
       totalInvestments,
       totalNetWorth: latestNW,
       loading: false,
+      error: null,
     })
+    } catch (err) {
+      setData(prev => ({ ...prev, loading: false, error: err instanceof Error ? err.message : 'Failed to load' }))
+    }
   }, [])
 
   useEffect(() => { load() }, [load])

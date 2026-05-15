@@ -90,8 +90,12 @@ export default function Layout() {
   return (
     <div className="flex flex-col min-h-screen bg-slate-900">
 
-      {/* Top bar */}
-      <header className="fixed top-0 inset-x-0 z-20 h-14 bg-slate-900 border-b border-slate-800 flex items-center justify-between px-4">
+      {/* Top bar — paddingTop pushes content below iPhone notch */}
+      <header
+        className="fixed top-0 inset-x-0 z-20 bg-slate-900 border-b border-slate-800"
+        style={{ paddingTop: 'env(safe-area-inset-top)' }}
+      >
+      <div className="h-14 flex items-center justify-between px-4">
         <span className="text-white font-bold text-lg tracking-tight">PF App</span>
         <div className="relative" ref={menuRef}>
           <button
@@ -112,12 +116,16 @@ export default function Layout() {
             </div>
           )}
         </div>
+      </div>
       </header>
 
-      {/* Page content — scrollable, padded for top bar + tab bar */}
+      {/* Page content — top padding tracks header height + safe-area-inset-top */}
       <main
-        className="flex-1 overflow-y-auto pt-14"
-        style={{ paddingBottom: 'calc(4rem + env(safe-area-inset-bottom) + 5rem)' }}
+        className="flex-1 overflow-y-auto"
+        style={{
+          paddingTop: 'calc(3.5rem + env(safe-area-inset-top))',
+          paddingBottom: 'calc(4rem + env(safe-area-inset-bottom) + 5rem)',
+        }}
       >
         <Outlet context={{ openEdit }} />
       </main>

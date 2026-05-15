@@ -80,6 +80,7 @@ export interface ForecastData {
   fixedLeaves: BudgetCat[]
   varLeaves: BudgetCat[]
   loading: boolean
+  error: string | null
 }
 
 function dateToLabel(dateStr: string): string {
@@ -107,9 +108,11 @@ export function useDashboardForecast(): ForecastData {
     fixedLeaves: [],
     varLeaves: [],
     loading: true,
+    error: null,
   })
 
   const load = useCallback(async () => {
+    try {
     const [{ data: tpmData }, { data: catData }, { data: budgetData }] = await Promise.all([
       supabase.from('three_paycheck_months').select('month').gte('month', '2026-04-01'),
       supabase.from('categories').select('id, name, type, is_fixed, parent_category_id'),
@@ -150,7 +153,10 @@ export function useDashboardForecast(): ForecastData {
       .filter(c => c.defaultAmt > 0)
       .sort((a, b) => b.defaultAmt - a.defaultAmt)
 
-    setData({ threePay, fixedLeaves, varLeaves, loading: false })
+    setData({ threePay, fixedLeaves, varLeaves, loading: false, error: null })
+    } catch (err) {
+      setData(prev => ({ ...prev, loading: false, error: err instanceof Error ? err.message : 'Failed to load' }))
+    }
   }, [])
 
   useEffect(() => { load() }, [load])

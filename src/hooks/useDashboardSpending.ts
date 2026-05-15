@@ -35,6 +35,7 @@ export interface SpendingData {
   threePaycheckMonths: Set<string>
   months: string[]
   loading: boolean
+  error: string | null
 }
 
 function buildMonths(): string[] {
@@ -60,10 +61,11 @@ type RawTx = {
 export function useDashboardSpending(): SpendingData {
   const [data, setData] = useState<SpendingData>({
     spendingTxs: [], incomeTxs: [], categories: [], budgets: [],
-    threePaycheckMonths: new Set(), months: ALL_MONTHS, loading: true,
+    threePaycheckMonths: new Set(), months: ALL_MONTHS, loading: true, error: null,
   })
 
   const load = useCallback(async () => {
+    try {
     const [{ data: txData }, { data: catData }, { data: budgetData }, { data: tpmData }] = await Promise.all([
       supabase
         .from('transactions')
@@ -104,7 +106,11 @@ export function useDashboardSpending(): SpendingData {
       threePaycheckMonths: new Set((tpmData ?? []).map((r: { month: string }) => r.month)),
       months: ALL_MONTHS,
       loading: false,
+      error: null,
     })
+    } catch (err) {
+      setData(prev => ({ ...prev, loading: false, error: err instanceof Error ? err.message : 'Failed to load' }))
+    }
   }, [])
 
   useEffect(() => { load() }, [load])

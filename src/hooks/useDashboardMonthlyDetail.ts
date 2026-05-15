@@ -33,6 +33,7 @@ export interface MonthlyDetailData {
   budgets: DetailBudget[]
   threePaycheckMonths: Set<string>
   loading: boolean
+  error: string | null
 }
 
 type RawTx = {
@@ -44,10 +45,11 @@ type RawTx = {
 
 export function useDashboardMonthlyDetail(): MonthlyDetailData {
   const [data, setData] = useState<MonthlyDetailData>({
-    transactions: [], categories: [], budgets: [], threePaycheckMonths: new Set(), loading: true,
+    transactions: [], categories: [], budgets: [], threePaycheckMonths: new Set(), loading: true, error: null,
   })
 
   const load = useCallback(async () => {
+    try {
     const [{ data: txData }, { data: catData }, { data: budgetData }, { data: tpmData }] = await Promise.all([
       supabase
         .from('transactions')
@@ -78,7 +80,11 @@ export function useDashboardMonthlyDetail(): MonthlyDetailData {
       })),
       threePaycheckMonths: new Set((tpmData ?? []).map((r: { month: string }) => r.month)),
       loading: false,
+      error: null,
     })
+    } catch (err) {
+      setData(prev => ({ ...prev, loading: false, error: err instanceof Error ? err.message : 'Failed to load' }))
+    }
   }, [])
 
   useEffect(() => { load() }, [load])
