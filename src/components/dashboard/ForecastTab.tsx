@@ -482,7 +482,7 @@ export default function ForecastTab({ data }: { data: ForecastData }) {
               <XAxis dataKey="name" tick={RotTick as any} interval={0} />
               <YAxis tickFormatter={fmtK} tick={{ fill: '#64748b', fontSize: 11 }} width={40} />
               <Tooltip
-                formatter={(v: number) => [fmt(v), 'Income'] as [string, string]}
+                formatter={(v: unknown) => [`$${Number(v).toLocaleString()}`, ''] as [string, string]}
                 contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #334155', borderRadius: 8 }}
                 labelStyle={{ color: '#94a3b8' }}
               />
